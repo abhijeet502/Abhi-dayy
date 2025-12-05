@@ -3,164 +3,327 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Spider-Verse Birthday — Abhii</title>
-<meta name="color-scheme" content="dark">
+<title>Happy Birthday — Abhi</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Nunito:wght@300;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg-a:#770e19;
-  --bg-b:#200810;
-  --accent:#ff3f61;
-  --accent-2:#ffd85e;
-  --card-radius:22px;
-  --text:#ffe8e9;
-  --muted:rgba(246,223,225,0.78);
-  --maxw:430px;
-}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,Roboto,Arial;color:var(--text);background:
-    radial-gradient(circle at 49% 13%,rgba(255,255,255,0.03) 0,transparent 38%),
-    radial-gradient(circle at 10% 92%,rgba(255,255,255,0.033) 0,transparent 44%),
-    linear-gradient(180deg,var(--bg-a),var(--bg-b));
-    position:relative;
+  :root{ --accent:#ff3b3b; --muted:#ffd6d6; --dark:#080308; }
+  html,body{height:100%;margin:0;background: radial-gradient(closest-side at 50% 10%, rgba(255,0,0,0.06),transparent 40%), linear-gradient(180deg,#4b0303,#230000 50%); font-family:'Nunito',system-ui,Arial; color:#fff; -webkit-font-smoothing:antialiased;}
+  /* background overlay uses pixabay CDN */
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image:url('https://cdn.pixabay.com/photo/2016/11/19/17/20/spider-web-1845492_1280.png');
+    background-repeat:no-repeat; background-position:center top; background-size:cover; opacity:0.12; pointer-events:none; filter:grayscale(8%) contrast(.9);
   }
-body::before{
-  content:"";
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    url("data:image/svg+xml;utf8,<svg width='800' height='800' xmlns='http://www.w3.org/2000/svg'><g opacity='0.09'><path d='M400 0L400 800 M0 400L800 400 M90 90Q400 400 710 90 M90 710Q400 400 710 710 M220 30Q400 400 580 30 M220 770Q400 400 580 770' stroke='%23fff' stroke-width='2' fill='none'/></g></svg>");
-  background-repeat:repeat;
-  background-size:800px 800px;
-}
-.container{max-width:var(--maxw);margin:36px auto 15px auto;padding:10px 8px 5px 8px;position:relative;z-index:10}
-.screen{display:none;}
-.screen.active{display:block;}
-.card{background:linear-gradient(180deg,rgba(32,0,28,0.62),rgba(0,0,0,0.84));border-radius:var(--card-radius);padding:24px 16px 22px 16px;margin:32px 0 24px;border:1px solid rgba(255,255,255,0.09);box-shadow:0 14px 55px rgba(255,63,97,0.08);}
-.center{display:flex;align-items:center;justify-content:center;flex-direction:column}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 29px;border-radius:40px;background:linear-gradient(180deg,var(--accent),#991627);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:17px;box-shadow:0 0 16px #ff3f6170;}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.11);color:var(--muted)}
-.btn.small{padding:8px 15px;font-size:13px}
-.spidey-pixel{position:absolute;z-index:12;filter:drop-shadow(0 4px 8px #23041885);}
-.spidey-topright{top:-28px;right:-19px;width:72px;}
-.spidey-bottomleft{bottom:-36px;left:-28px;width:92px;}
-.spidey-envelope{bottom:-28px;right:-18px;width:66px;}
 
-.title{font-weight:900;font-size:30px;color:#ff3f61;text-shadow:0 6px 30px rgba(255,63,97,0.09);margin:7px 0 12px 0;text-align:center;}
-.subtitle{font-size:15px;color:var(--muted);margin-bottom:13px;text-align:center;}
-.caption{font-size:14px;color:#ffcfcf;text-align:center;margin:9px 0 7px 0;opacity:0.74;font-weight:400;}
-.small{font-size:13px;color:var(--muted);}
-.cake-stage{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0 10px 0;min-height:206px;position:relative;}
-.cake-svg{width:210px;height:auto;display:block;margin-top:16px;}
-.candle-wrap{position:absolute;top:29px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:20;}
-.candle{width:15px;height:44px;background:linear-gradient(180deg,#ffdba4,#ff9f6a);border-radius:4px;box-shadow:0 6px 18px rgba(0,0,0,0.40);}
-.flame{width:21px;height:21px;border-radius:50%;margin-bottom:2px;filter:blur(.6px);transform-origin:center;animation:flameF 270ms infinite;background:radial-gradient(circle at 50% 38%, #ffd67a 0 60%, #ff7a3b 100%, rgba(255,200,160,0.05) 100%);}
-@keyframes flameF{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(.95)}100%{transform:translateY(0) scale(1)}}
-.result{font-weight:900;color:var(--accent-2);text-align:center;margin:15px 0 8px 0;font-size:18px;}
-.envelope{width:170px;height:110px;border-radius:14px;position:relative;background:linear-gradient(180deg,#0c0b10,#0f0a19);box-shadow:0 16px 34px rgba(0,0,0,0.43),inset 0 4px 17px rgba(255,255,255,0.028);border:2.8px solid #ff4f65;}
-.env-flap{position:absolute;left:0;right:0;top:-7px;height:53px;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(180deg,#9c1b2b 15%,#df0a2d 76%);border-radius:12px;}
-.env-body{position:absolute;left:11px;right:11px;top:11px;bottom:9px;background:linear-gradient(180deg,#241528,#14111a);border-radius:7.2px;}
-.env-glow{position:absolute;inset:-2px;border-radius:12px;box-shadow:0 0 38px rgba(255,63,97,0.13);}
-@media(max-width:480px){.container{padding:0 2vw}.card{margin:22px 0 12px;padding:14px 7px 12px 7px}.cake-svg{width:96vw;min-width:120px;max-width:213px}}
+  .wrap{max-width:880px;margin:20px auto;padding:16px;}
+  .card{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.28)); border-radius:22px; padding:22px; border:2px solid rgba(255,0,0,0.14); box-shadow: 0 18px 48px rgba(0,0,0,0.6); position:relative; overflow:visible}
+
+  .spider{position:fixed; width:70px; height:70px; z-index:5; pointer-events:none; opacity:0.95; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.6));}
+  .sp1{ left:8%; top:8%; transform:translateY(-10px); animation:floaty 6s ease-in-out infinite;}
+  .sp2{ right:6%; top:6%; width:86px; height:86px; animation:floaty 7s ease-in-out infinite reverse;}
+  .sp3{ left:4%; bottom:8%; width:60px;height:60px; animation:floaty 8s ease-in-out infinite;}
+  @keyframes floaty { 0%{transform:translateY(0)} 50%{transform:translateY(18px)} 100%{transform:translateY(0)} }
+
+  .title{font-weight:800;color:var(--accent);font-size:30px;text-align:center;margin:8px 0; letter-spacing:0.6px;}
+  .glitch { display:inline-block; position:relative; color:var(--accent); font-weight:900; }
+  .glitch::before, .glitch::after{ content:attr(data-text); position:absolute; left:0; top:0; width:100%; opacity:.8; }
+  .glitch::before{ transform:translate(-2px, -1px); color:#ff9b9b; mix-blend-mode:screen; opacity:.7; animation:glitch-anim-1 2.2s infinite linear; }
+  .glitch::after{ transform:translate(2px, 1px); color:#ffffff; mix-blend-mode:overlay; opacity:.5; animation:glitch-anim-2 2.6s infinite linear; }
+  @keyframes glitch-anim-1 { 0%,10%{clip-path:inset(0)} 11%{clip-path:inset(20% 0 60% 0)} 12%{clip-path:inset(0)} 50%{clip-path:inset(50% 0 10% 0)} 90%{clip-path:inset(0)} }
+  @keyframes glitch-anim-2 { 0%,20%{clip-path:inset(0)} 21%{clip-path:inset(10% 0 50% 0)} 22%{clip-path:inset(0)} 70%{clip-path:inset(30% 0 20% 0)} 100%{clip-path:inset(0)} }
+
+  .hero-row{display:flex;gap:14px;align-items:center;justify-content:center;margin:18px 0;}
+  .hero-img{width:86px;height:86px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.22)); display:flex;align-items:center;justify-content:center; overflow:hidden; border:2px solid rgba(255,0,0,0.08);}
+  .hero-img img{width:100%;height:100%;object-fit:cover}
+
+  .content{background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.22)); padding:16px;border-radius:12px;color:#ffeaea; line-height:1.65; font-size:15px;}
+  .cta{display:flex;gap:12px;justify-content:center;margin-top:18px}
+  .btn{background:linear-gradient(180deg,var(--accent),#c21b1b); padding:14px 26px;border-radius:999px;border:none;color:white;font-weight:800;cursor:pointer; box-shadow: 0 14px 28px rgba(199,27,27,0.22)}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);padding:10px 16px;color:#ffbdbd;border-radius:12px}
+
+  .letter{margin-top:14px;background:linear-gradient(180deg,#05030a,#0b0810); border-radius:16px;padding:18px;border:1px solid rgba(255,0,0,0.06)}
+  .letter h3{color:#ff9a9a;margin:6px 0 6px;font-weight:800}
+  .letter p{color:#e8dede;margin:6px 0}
+
+  .envelope{display:flex;align-items:center;justify-content:center;padding:22px;border-radius:14px;background:#05060a; margin-top:16px; cursor:pointer; border:1px solid rgba(255,0,0,0.06);}
+  .envelope img{width:260px;max-width:74%}
+
+  .cake-wrap{display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;padding:18px}
+  .cake{font-size:84px; cursor:pointer; display:inline-block; user-select:none; transition:transform .12s ease}
+  .cake:active{ transform:translateY(2px) }
+  .flames{display:inline-block;margin-left:8px; transition:opacity .28s ease, transform .28s ease}
+  .flames.lit{opacity:1; transform:translateY(0)}
+  .flames.out{opacity:0; transform:translateY(-12px) scale(.9)}
+
+  .smoke{position:relative;width:160px;height:120px; pointer-events:none;}
+  .puff{position:absolute;left:50%;transform:translateX(-50%);top:56px;font-size:28px;opacity:0; filter:blur(0)}
+  .puff.animate{ animation:puffUp .9s ease forwards; }
+  @keyframes puffUp { 0%{ transform:translate(-50%,0) scale(.4); opacity:.9; filter:blur(0) } 100%{ transform:translate(-50%,-120px) scale(1.5); opacity:0; filter:blur(6px) } }
+
+  .confetti-piece{ position:fixed; width:10px; height:14px; pointer-events:none; z-index:9999; opacity:1; border-radius:2px; transform-origin:center; }
+
+  .credit{ text-align:center; color:#ffdede; margin-top:12px; font-weight:700 }
+
+  @media (max-width:540px){
+    .title{font-size:22px}
+    .card{padding:16px}
+    .hero-img{width:64px;height:64px}
+    .cake{font-size:64px}
+    .envelope img{width:220px}
+  }
 </style>
 </head>
 <body>
-<div class="container" role="main" aria-live="polite">
 
-  <!-- SCREEN 1: Welcome -->
-  <section class="screen card center active" id="screen1" style="min-height:320px;position:relative;">
-    <img class="spidey-pixel spidey-topright" src="data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='20' r='15' fill='%23bc1619'/%3E%3Cellipse cx='30' cy='40' rx='13' ry='16' fill='%23ed2454'/%3E%3Crect x='26' y='8' width='8' height='6' rx='2.3' fill='white'/%3E%3Crect x='15' y='32' width='9' height='7' rx='3.8' fill='%230b2147' transform='rotate(-25 19.5 35.5)'/%3E%3Crect x='36' y='32' width='9' height='7' rx='3.8' fill='%230b2147' transform='rotate(15 40.5 35.5)'/%3E%3C/svg%3E" alt="Spidey" />
-    <img class="spidey-pixel spidey-bottomleft" src="data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg%3E%3Cellipse cx='35' cy='55' rx='20' ry='24' fill='%23ed2454'/%3E%3Ccircle cx='35' cy='27' r='12' fill='%23bc1619'/%3E%3Crect x='23' y='16' width='8' height='7' rx='3.8' fill='white'/%3E%3Crect x='49' y='16' width='8' height='7' rx='3.8' fill='white'/%3E%3Crect x='17' y='45' width='10' height='9' rx='4.2' fill='%230b2147' transform='rotate(-28 22 49.5)'/%3E%3Crect x='53' y='45' width='10' height='9' rx='4.2' fill='%230b2147' transform='rotate(19 58 49.5)'/%3E%3C/g%3E%3Cline x1='9' y1='80' x2='54' y2='46' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E" alt="Swinging Spidey" />
-    <div class="title">🕷️ Happy Birthday, Hero! 🕸️</div>
-    <div class="subtitle">
-      In every universe, you’d still be the one saving the day.<br>
-      Today we celebrate the real superhero of this story — <b>you</b>.
-    </div>
-    <div class="caption">Ready to swing into your birthday surprise?</div>
-    <button class="btn" id="enterBtn">Swing In!</button>
-    <div class="caption" style="margin-top:10px;">Crafted by <strong>Abhii</strong> with great power &amp; great responsibility 🕸️</div>
-  </section>
+  <!-- floating decorative spiders (CDN image used) -->
+  <img src="https://cdn.pixabay.com/photo/2021/02/08/12/20/superhero-5995702_1280.png" class="spider sp1" alt="spider dec">
+  <img src="https://cdn.pixabay.com/photo/2021/02/08/12/20/superhero-5995702_1280.png" class="spider sp2" alt="spider dec">
+  <img src="https://cdn.pixabay.com/photo/2021/02/08/12/20/superhero-5995702_1280.png" class="spider sp3" alt="spider dec">
 
-  <!-- SCREEN 2: Envelope -->
-  <section class="screen card center" id="screen2" style="min-height:260px;position:relative;">
-    <img class="spidey-pixel spidey-envelope" src="data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='20' r='15' fill='%23bc1619'/%3E%3Cellipse cx='30' cy='40' rx='13' ry='16' fill='%23ed2454'/%3E%3Crect x='26' y='8' width='8' height='6' rx='2.3' fill='white'/%3E%3Crect x='15' y='32' width='9' height='7' rx='3.8' fill='%230b2147' transform='rotate(-25 19.5 35.5)'/%3E%3Crect x='36' y='32' width='9' height='7' rx='3.8' fill='%230b2147' transform='rotate(15 40.5 35.5)'/%3E%3C/svg%3E" alt="Spidey" />
-    <div class="title">A Spider-Verse Birthday Letter 🕷️💌</div>
-    <div class="subtitle">From my heart to my favourite hero</div>
-    <div class="envelope" id="envelope" tabindex="0" aria-label="Open envelope" style="margin-top:12px;">
-      <div class="env-flap" id="envFlap"></div>
-      <div class="env-body"></div>
-      <div class="env-glow"></div>
-    </div>
-    <div class="caption" style="margin-top:15px;">Click to open your birthday transmission<br><strong>Spider-Special Delivery by Abhii 🕸️</strong></div>
-    <button class="btn ghost small" id="back1" style="margin-top:9px;">Back</button>
-  </section>
+  <div class="wrap">
 
-  <!-- SCREEN 3: Birthday Letter -->
-  <section class="screen card center" id="screen3" style="min-height:242px;position:relative;">
-    <img class="spidey-pixel spidey-topright" src="data:image/svg+xml,%3Csvg width='54' height='54' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='20' r='15' fill='%23bc1619'/%3E%3Cellipse cx='30' cy='40' rx='13' ry='16' fill='%23ed2454'/%3E%3Crect x='26' y='8' width='8' height='6' rx='2.3' fill='white'/%3E%3Crect x='15' y='32' width='9' height='7' rx='3.8' fill='%230b2147' transform='rotate(-25 19.5 35.5)'/%3E%3Crect x='36' y='32' width='9' height='7' rx='3.8' fill='%230b2147' transform='rotate(15 40.5 35.5)'/%3E%3C/svg%3E" alt="Spidey" />
-    <div class="title">Happy Birthday, Hero! ✨</div>
-    <div class="subtitle">In every universe, you’d still be the one saving the day.</div>
-    <div id="letter" class="small" style="margin:13px 0 4px 0;min-height:100px;">
-      Hey Hero —<br><br>
-      Across the Spider-Verse and every skyline, there’s one thing that never changes: you.<br>
-      You’ve swung through hard days, cracked jokes at the worst possible times, and still stood tall when others needed you.<br>
-      Tonight we celebrate the real superhero of this story — you.<br><br>
-      Wishes, webs, and unstoppable spirit. Make a wish that even the multiverse will notice.<br><br>
-      — With love, Abhii 🕷️
-    </div>
-    <div style="display:flex;gap:13px;justify-content:center;margin-top:20px;">
-      <button class="btn" id="toSurprise">Time for your birthday surprise →</button>
-      <button class="btn ghost small" id="back2">Back</button>
-    </div>
-  </section>
-
-  <!-- SCREEN 4: Cake + Candle -->
-  <section class="screen card center" id="screen4" style="min-height:320px;position:relative;">
-    <div class="title">Make a Wish, Hero ✨</div>
-    <div class="subtitle">Tap the candle or blow into the mic to extinguish it</div>
-    <div class="cake-stage" style="position:relative;">
-      <img class="cake-svg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 210 88'%3E%3Cellipse cx='105' cy='87' rx='87' ry='13' fill='%23070016'/%3E%3Crect x='24' y='54' width='162' height='36' rx='32' fill='%23f7d0a2'/%3E%3Cellipse cx='105' cy='54' rx='82' ry='32' fill='%23ffebbe'/%3E%3Cellipse cx='105' cy='54' rx='87' ry='35' fill='%23fedba6'/%3E%3Cg%3E%3Cellipse cx='105' cy='54' rx='72' ry='24' fill='%23f9c187'/%3E%3C/g%3E%3C/svg%3E" alt="Birthday Cake"/>
-      <div class="candle-wrap" id="candleWrap" title="Tap to blow" style="top:29px;">
-        <div id="flame" class="flame" aria-hidden="true"></div>
-        <div id="candle" class="candle" role="button" aria-label="Candle"></div>
+    <!-- PAGE 1 -->
+    <section id="page1" class="card" style="display:block">
+      <div style="text-align:center">
+        <div class="title"><span class="glitch" data-text="🕷️ Happy Birthday, Hero!">🕷️ Happy Birthday, Hero!</span></div>
+        <div style="color:#ffdede;font-weight:700;margin-bottom:4px">From my heart to my favourite hero — <strong>Abhi</strong></div>
       </div>
-    </div>
-    <div id="result" class="result" aria-live="polite"></div>
-    <button class="btn small ghost" id="back3" style="margin-top:10px;">Back</button>
-    <div class="caption" style="margin-top:10px;">Tip: double-tap candle to enable voice blow (microphone permission required).</div>
-  </section>
-  <div style="text-align:center;font-size:13px;color:var(--muted);margin-top:12px">Made with ❤️ by Abhii — Spider-Verse edition</div>
-</div>
+
+      <div class="hero-row">
+        <div class="hero-img" title="Decoration">
+          <img src="https://cdn.pixabay.com/photo/2021/02/08/12/20/superhero-5995702_1280.png" alt="hero left">
+        </div>
+
+        <div style="flex:1">
+          <div class="content">In every universe you'd still be the one saving the day. Today we celebrate the real superhero of this story — <strong>you</strong>. Ready to swing into your birthday surprise? Click below.</div>
+        </div>
+
+        <div class="hero-img">
+          <img src="https://cdn.pixabay.com/photo/2021/02/08/12/20/superhero-5995702_1280.png" alt="hero right">
+        </div>
+      </div>
+
+      <div class="cta">
+        <button class="btn" onclick="showPage(2)">Swing In!</button>
+        <button class="ghost" onclick="toggleMusic()">🔊 Music</button>
+      </div>
+
+      <div style="text-align:center;margin-top:10px;color:#ffdede">Crafted with great power & responsibility — <strong>Abhi</strong></div>
+    </section>
+
+    <!-- PAGE 2 -->
+    <section id="page2" class="card" style="display:none">
+      <h2 style="text-align:center;color:#ffb3b3">A Spider-Verse Birthday Letter 🕸️💌</h2>
+      <p style="text-align:center;color:#ffdede;margin-top:0">Straight from Abhi's heart to the birthday hero</p>
+
+      <div class="letter">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:46px;height:46px;border-radius:10px;overflow:hidden"><img src="https://cdn.pixabay.com/photo/2021/02/08/12/20/superhero-5995702_1280.png" style="width:100%;height:100%;object-fit:cover"></div>
+            <div style="font-weight:800;color:#ff9a9a">To my Birthday Hero</div>
+          </div>
+          <img src="https://cdn.pixabay.com/photo/2021/02/08/12/20/superhero-5995702_1280.png" style="width:70px;height:70px">
+        </div>
+
+        <h3 style="margin-top:12px;color:#ff9a9a">My dearest birthday hero,</h3>
+        <p>Today marks another year of your incredible existence, and I couldn’t be more grateful to be part of your story. You don’t need a mask or a suit to be a hero — the way you care, smile, and show up for the people you love already makes your world safer and brighter.</p>
+        <p>You bring your own kind of superpower into every room you walk into: your laugh, your chaos, your softness, your strength. You deserve every happy universe, every peaceful night, every dream you’re secretly chasing.</p>
+        <p>On this day, I just want you to know: no matter how many timelines or realities there are, I would still choose this one — the one where I get to celebrate <strong>you</strong>.</p>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+          <div style="color:#ffdede;font-weight:600">Made with ❤️ for your special day</div>
+          <div style="text-align:right;color:#ff9a9a;font-weight:800">Forever on your side,<br><span style="font-size:16px;color:#ffdce0">Abhi 💖🕷️</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:14px">
+        <button class="btn" onclick="showPage(3)">Continue It ✨</button>
+        <button class="ghost" onclick="showPage(1)">Back</button>
+      </div>
+    </section>
+
+    <!-- PAGE 3 -->
+    <section id="page3" class="card" style="display:none">
+      <h2 style="text-align:center;color:#ffb3b3">A Spider-Special Delivery</h2>
+      <p style="text-align:center;color:#ffdede">Click the envelope to open your birthday transmission</p>
+
+      <div class="envelope" onclick="openEnvelope()">
+        <img id="envelopeImg" src="https://cdn.pixabay.com/photo/2016/03/31/20/59/envelope-1292835_1280.png" alt="envelope">
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+        <button class="btn" onclick="openEnvelope()">Open</button>
+        <button class="ghost" onclick="showPage(2)">Back</button>
+      </div>
+    </section>
+
+    <!-- PAGE 4 -->
+    <section id="page4" class="card" style="display:none">
+      <h2 style="text-align:center;color:#ffb3b3">Make a Wish — Blow the Candles Out</h2>
+      <p style="text-align:center;color:#ffdede">Tap the cake OR use your mic to blow (allow microphone)</p>
+
+      <div class="cake-wrap">
+        <div id="cakeBtn" class="cake" onclick="tryExtinguish(true)" title="Tap to blow candles">🎂
+          <span id="flames" class="flames lit">🔥🔥🔥</span>
+        </div>
+
+        <div class="smoke" id="smoke">
+          <div id="p1" class="puff">💨</div>
+          <div id="p2" class="puff">💨</div>
+          <div id="p3" class="puff">💨</div>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button class="btn" onclick="startListen()">Blow with mic</button>
+          <button class="ghost" onclick="resetCandles()">Reset</button>
+          <button class="ghost" onclick="showPage(1)">Home</button>
+        </div>
+
+        <div style="text-align:center;color:#ffdede;margin-top:8px">Tip: On phones, place mic near your mouth and blow gently into it.</div>
+      </div>
+
+      <div class="credit">Made with ❤️ by <strong>Abhi</strong></div>
+    </section>
+
+  </div>
+
+<!-- optional audio (CDN not used by default) -->
+<audio id="bgm" loop></audio>
 
 <script>
-const screens = {
-  s1:document.getElementById('screen1'),
-  s2:document.getElementById('screen2'),
-  s3:document.getElementById('screen3'),
-  s4:document.getElementById('screen4')
-};
-function showScreen(name){
-  Object.values(screens).forEach(s=>{
-    s.classList.remove('active');s.style.display='none';
-  });
-  const el = screens[name]; if(!el) return;
-  el.classList.add('active'); el.style.display='block';
-}
-showScreen('s1');
-document.getElementById('enterBtn').onclick=()=>showScreen('s2');
-document.getElementById('back1').onclick=()=>showScreen('s1');
-document.getElementById('back2').onclick=()=>showScreen('s2');
-document.getElementById('back3').onclick=()=>showScreen('s3');
-document.getElementById('toSurprise').onclick=()=>showScreen('s4');
+  // navigation helper: show page 1..4
+  function showPage(n){
+    const cards = document.querySelectorAll('.wrap > section.card');
+    cards.forEach((c, idx) => c.style.display = (idx === (n-1) ? 'block' : 'none'));
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
 
-// Candle interaction
-const flame=document.getElementById('flame');
-const candle=document.getElementById('candle');
-let blown=false;
-candle.onclick=function(){
-  if(blown) return;
-  flame.style.opacity=0;
-  blown=true;
-  document.getElementById('result').textContent='🎂 Wish granted! 🎉';
-  setTimeout(()=>{flame.style.opacity=1;blown=false;document.getElementById('result').textContent="";},2000)
-};
+  function openEnvelope(){
+    const env = document.getElementById('envelopeImg');
+    env.style.transition = 'transform .8s ease, opacity .6s';
+    env.style.transform = 'rotateY(180deg) scale(.96)';
+    env.style.opacity = '0.95';
+    setTimeout(()=> showPage(4), 850);
+  }
+
+  function toggleMusic(){
+    const bgm = document.getElementById('bgm');
+    if(!bgm.src || bgm.src === "") { alert('No ambient track provided. Add one by setting bgm.src to a URL if you want music.'); return; }
+    if(bgm.paused){ bgm.play().catch(()=>{}); alert('Music started'); }
+    else{ bgm.pause(); alert('Music paused'); }
+  }
+
+  /* Cake logic */
+  let candlesLit = true;
+  function tryExtinguish(byClick){
+    if(!candlesLit) return;
+    extinguish(byClick);
+  }
+
+  function extinguish(byClick){
+    candlesLit = false;
+    const flames = document.getElementById('flames');
+    flames.classList.remove('lit'); flames.classList.add('out');
+
+    try{ const pop = new Audio(); pop.src = ''; pop.play().catch(()=>{}); }catch(e){}
+
+    const p1 = document.getElementById('p1'), p2 = document.getElementById('p2'), p3 = document.getElementById('p3');
+    [p1,p2,p3].forEach((p, i)=> {
+      setTimeout(()=> { p.classList.add('animate'); }, 80 + i*140);
+      setTimeout(()=> { p.classList.remove('animate'); }, 1000 + i*120);
+    });
+
+    burstConfetti();
+
+    setTimeout(()=> {
+      try{ navigator.vibrate && navigator.vibrate(120); }catch(e){}
+      alert('Candles out! Make a wish ✨');
+    }, 900);
+  }
+
+  function resetCandles(){
+    candlesLit = true;
+    const flames = document.getElementById('flames');
+    flames.classList.remove('out'); flames.classList.add('lit');
+  }
+
+  function burstConfetti(){
+    const colors = ['#ff4b4b','#ffd24b','#8aff8a','#4bafff','#d57bff'];
+    for(let i=0;i<30;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
+      el.style.left = (50 + (Math.random()*60 - 30)) + '%';
+      el.style.top = (20 + Math.random()*10) + '%';
+      el.style.width = (6 + Math.random()*12)+'px';
+      el.style.height = (8 + Math.random()*14)+'px';
+      el.style.transform = `translate3d(0,-20vh,0) rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(el);
+      const tx = (Math.random()*160 - 80);
+      el.animate([
+        { transform: `translate3d(0,-30vh,0) rotate(0deg)`, opacity:1 },
+        { transform: `translate3d(${tx}px, 70vh,0) rotate(${360 + Math.random()*540}deg)`, opacity:1 }
+      ], { duration: 1200 + Math.random()*700, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      setTimeout(()=> el.remove(), 1600 + Math.random()*900);
+    }
+  }
+
+  /* Mic blow detection */
+  let audioContext, analyser, sourceNode, dataArray, listening=false;
+  async function startListen(){
+    if(listening) return alert('Already listening for blow...');
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 2048;
+      sourceNode = audioContext.createMediaStreamSource(stream);
+      sourceNode.connect(analyser);
+      dataArray = new Uint8Array(analyser.fftSize);
+      listening = true;
+      monitorBlow(stream);
+      setTimeout(()=> stopListening(stream), 8000);
+    }catch(err){
+      console.error(err);
+      alert('Microphone access denied or not available.');
+    }
+  }
+
+  function stopListening(stream){
+    listening = false;
+    try{ if(stream && stream.getTracks) stream.getTracks().forEach(t=>t.stop()); if(sourceNode) sourceNode.disconnect(); if(audioContext) audioContext.close().catch(()=>{}); }catch(e){}
+  }
+
+  function monitorBlow(stream){
+    let consecutive = 0; const needed = 3; const threshold = 15;
+    const loop = ()=>{
+      if(!listening) return;
+      analyser.getByteTimeDomainData(dataArray);
+      let sum=0;
+      for(let i=0;i<dataArray.length;i++){ const v = dataArray[i] - 128; sum += v*v; }
+      const rms = Math.sqrt(sum / dataArray.length);
+      if(rms > threshold){
+        consecutive++;
+        if(consecutive >= needed){
+          extinguish(false);
+          stopListening(stream);
+          return;
+        }
+      } else consecutive = Math.max(0, consecutive-1);
+      requestAnimationFrame(loop);
+    };
+    loop();
+  }
+
+  // init: show first page
+  (function init(){ showPage(1); })();
+
+  // small click hint on floating spiders
+  document.addEventListener('click', (e)=>{
+    const t = e.target;
+    if(t.classList && t.classList.contains('spider')) alert('Decoration: image loaded from CDN. To replace, edit the HTML image src.');
+  });
+
 </script>
 </body>
 </html>
