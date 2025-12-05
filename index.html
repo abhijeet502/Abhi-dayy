@@ -6,190 +6,168 @@
 <title>Spider-Verse Birthday — Abhii</title>
 <meta name="color-scheme" content="dark">
 <style>
-/* ===== Theme variables ===== */
+/* ---------- Theme & base ---------- */
 :root{
   --bg-a:#6a0f12; --bg-b:#21050a;
   --accent:#ff3f61; --accent-2:#ffcf5a;
   --card-radius:22px; --text:#f6dfe1; --muted:rgba(246,223,225,0.78);
-  --maxw:540px;
+  --maxw:640px;
 }
-:root.deadpool{ --bg-a:#120405; --bg-b:#070102; --accent:#d71f2a; --accent-2:#fff; --muted:rgba(255,255,255,0.9); }
-
-/* ===== Reset & layout ===== */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter,system-ui,Roboto,Arial;color:var(--text);background:linear-gradient(180deg,var(--bg-a),var(--bg-b));-webkit-font-smoothing:antialiased}
 .container{max-width:var(--maxw);margin:8px auto;padding:18px;position:relative;z-index:10}
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    radial-gradient(circle at 50% 8%, rgba(255,255,255,0.02) 0, transparent 25%),
-    radial-gradient(circle at 10% 75%, rgba(255,255,255,0.02) 0, transparent 25%),
-    linear-gradient(180deg, rgba(0,0,0,0.08), transparent 40%);
-  mix-blend-mode:overlay;opacity:.95;
-}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle at 50% 8%, rgba(255,255,255,0.02) 0, transparent 25%),radial-gradient(circle at 10% 75%, rgba(255,255,255,0.02) 0, transparent 25%),linear-gradient(180deg, rgba(0,0,0,0.08), transparent 40%);mix-blend-mode:overlay;opacity:.95}
 
-/* ===== Topbar ===== */
+/* ---------- Topbar ---------- */
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .logo{display:flex;align-items:center;gap:8px}
 .logo .dot{width:14px;height:14px;border-radius:6px;background:var(--accent);box-shadow:0 8px 20px rgba(255,63,97,0.12)}
 .theme-toggle{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:12px;color:var(--muted);font-weight:700}
 
-/* ===== Cards & UI ===== */
-.card{background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(0,0,0,0.6));border-radius:var(--card-radius);padding:16px;margin:16px 0;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 40px rgba(0,0,0,0.6);position:relative;overflow:visible}
-.card.glow{box-shadow:0 20px 60px rgba(255,63,97,0.06),inset 0 4px 20px rgba(255,63,97,0.03)}
+/* ---------- Cards ---------- */
+.card{background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(0,0,0,0.6));border-radius:var(--card-radius);padding:20px;margin:16px 0;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 40px rgba(0,0,0,0.6);position:relative;overflow:visible}
+.card.glow{box-shadow:0 20px 80px rgba(255,63,97,0.06),inset 0 6px 26px rgba(255,63,97,0.03)}
 .center{display:flex;align-items:center;justify-content:center;flex-direction:column}
-.title{font-weight:800;font-size:24px;color:#ffb3bd;text-shadow:0 6px 24px rgba(255,63,97,0.06);margin:6px 0}
+.title{font-weight:900;font-size:26px;color:#ffd1d7;text-shadow:0 6px 30px rgba(255,63,97,0.06);margin:6px 0}
 .subtitle{font-size:13px;color:var(--muted);margin:0}
 
-/* ===== Buttons ===== */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:40px;background:linear-gradient(180deg,var(--accent),#b0112a);color:#fff;border:none;cursor:pointer;font-weight:800;gap:10px}
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 22px;border-radius:40px;background:linear-gradient(180deg,var(--accent),#b0112a);color:#fff;border:none;cursor:pointer;font-weight:800;gap:10px}
 .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
 .btn.small{padding:8px 12px;font-size:13px}
 
-/* ===== Hero animated SVG ===== */
-.hero{width:100%;max-width:420px;border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,0.6);display:block;margin:10px auto}
+/* ---------- hero & stickers ---------- */
+.hero-wrap{position:relative; width:100%; max-width:540px; margin:12px auto}
+.hero-card{border-radius:18px;padding:28px;background:linear-gradient(180deg,#061018 0,#080b0f 100%);box-shadow:inset 0 4px 18px rgba(255,255,255,0.02)}
+.hero-stand{position:absolute;right:14px;top:-6px; width:74px; height:74px; transform:translateZ(0); pointer-events:none}
+.hero-swing{position:absolute;left:8px;bottom:6px;width:94px;height:94px;pointer-events:none; transform-origin:left bottom}
+.hero-sticker{position:absolute;right:12px;top:12px;width:56px;height:56px;pointer-events:none}
+.hero-title{font-weight:900;font-size:24px;color:#ffb3bd;margin:6px 0;text-align:center}
+.hero-desc{font-size:14px;color:var(--muted);text-align:center;margin-bottom:10px}
 
-/* ===== Envelope ===== */
-.envelope{width:220px;height:130px;border-radius:14px;position:relative;background:linear-gradient(180deg,#0b0b10,#0f0f14);box-shadow:0 18px 50px rgba(0,0,0,0.6), inset 0 4px 12px rgba(255,255,255,0.02);cursor:pointer;transition:transform .28s}
-.envelope:hover{transform:translateY(-8px)}
-.env-flap{position:absolute;left:0;right:0;top:-6px;height:70px;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(180deg,#4a080d,#a80b12);border-radius:14px;transition:transform .45s}
+/* ---------- envelope, hanger ---------- */
+.envelope{width:220px;height:130px;border-radius:14px;position:relative;background:linear-gradient(180deg,#0c0b10,#0f0f14);box-shadow:0 18px 50px rgba(0,0,0,0.6), inset 0 4px 12px rgba(255,255,255,0.02);cursor:pointer;transition:transform .28s}
+.envelope:hover{transform:translateY(-6px)}
+.env-flap{position:absolute;left:0;right:0;top:-6px;height:70px;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(180deg,#4a080d,#a80b12);border-radius:12px;transition:transform .45s}
 .env-body{position:absolute;left:12px;right:12px;top:18px;bottom:12px;background:linear-gradient(180deg,#051018,#07111a);border-radius:8px}
-.env-glow{position:absolute;inset:-2px;border-radius:14px;box-shadow:0 0 48px rgba(255,63,97,0.09)}
+.env-glow{position:absolute;inset:-2px;border-radius:12px;box-shadow:0 0 48px rgba(255,63,97,0.09)}
 .small{font-size:13px;color:var(--muted);margin-top:10px;text-align:center}
 
-/* ===== Hanging spider / slider (page 2) ===== */
-.hanger {position:absolute; left:50%; top:-6px; transform:translateX(-50%); pointer-events:auto; z-index:30;}
-.hanger svg {width:84px; height:84px; display:block; transform-origin:center top; will-change:transform; cursor:pointer;}
-.web-line {stroke:rgba(255,255,255,0.06); stroke-width:2; stroke-linecap:round;}
-.hanger .rope {transform-origin:50% 0; animation:ropeSwing 2200ms ease-in-out infinite;}
-.hanger .spidey {animation:spideyBounce 2200ms ease-in-out infinite; transform-origin:center top;}
-@keyframes ropeSwing {
-  0%{ transform: rotate(-6deg) translateY(0) }
-  50%{ transform: rotate(6deg) translateY(6px) }
-  100%{ transform: rotate(-6deg) translateY(0) }
-}
-@keyframes spideyBounce {
-  0%{ transform: translateY(0) rotate(-6deg) }
-  50%{ transform: translateY(6px) rotate(6deg) }
-  100%{ transform: translateY(0) rotate(-6deg) }
-}
-.hanger.enter { animation:dropIn 900ms cubic-bezier(.2,.9,.3,1) forwards; }
-@keyframes dropIn {
-  0%{ transform:translateX(-50%) translateY(-120px) scale(.9); opacity:0 }
-  70%{ opacity:1 }
-  100%{ transform:translateX(-50%) translateY(0) scale(1); opacity:1 }
-}
-
-/* ===== letter + cake styles ===== */
-.letter{min-height:220px;font-size:15px;color:var(--muted);line-height:1.6;padding:8px 6px}
-.typed-line{margin:8px 0}
+/* ---------- letter & cake ---------- */
+.letter{min-height:240px;font-size:16px;color:var(--muted);line-height:1.8;padding:12px 10px;border-radius:12px}
+.typed-line{margin:10px 0}
 .cake-stage{display:flex;flex-direction:column;align-items:center;gap:12px;padding:12px}
-.cake{width:260px;position:relative;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6))}
-.candle-wrap{position:absolute;right:20px;top:-38px;display:flex;flex-direction:column;align-items:center}
-.candle{width:8px;height:36px;border-radius:3px;background:linear-gradient(180deg,#ffdba4,#ff9f6a);box-shadow:0 6px 18px rgba(0,0,0,0.45)}
-.flame{width:18px;height:18px;border-radius:50%;margin-bottom:6px;filter:blur(.6px);transform-origin:center;animation:flameF 260ms infinite;background:radial-gradient(circle at 35% 30%, #ffd67a,#ff7a3f)}
+.candle-wrap{position:absolute;right:20px;top:-36px;display:flex;flex-direction:column;align-items:center}
+.candle{width:10px;height:36px;border-radius:3px;background:linear-gradient(180deg,#ffdba4,#ff9f6a);box-shadow:0 6px 18px rgba(0,0,0,0.45)}
+.flame{width:18px;height:18px;border-radius:50%;margin-bottom:6px;filter:blur(.6px);transform-origin:center;animation:flameF 280ms infinite;background:radial-gradient(circle at 35% 30%, #ffd67a,#ff7a3f)}
 @keyframes flameF{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(.96)}100%{transform:translateY(0) scale(1)}}
 .smoke{position:absolute;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:rgba(220,220,220,0.6);animation:smokeRise 900ms forwards}
 @keyframes smokeRise{0%{opacity:1;transform:translateY(0) scale(.7)}100%{opacity:0;transform:translateY(-70px) scale(1.6)}}
 
-/* confetti canvas */
+/* ---------- hanger ---------- */
+.hanger {position:absolute; left:50%; top:6px; transform:translateX(-50%); pointer-events:auto; z-index:30;}
+.hanger svg {width:88px; height:88px; display:block; transform-origin:center top; will-change:transform; cursor:pointer;}
+.web-line {stroke:rgba(255,255,255,0.06); stroke-width:2; stroke-linecap:round;}
+.hanger .rope {transform-origin:50% 0; animation:ropeSwing 2200ms ease-in-out infinite;}
+.hanger .spidey {animation:spideyBounce 2200ms ease-in-out infinite; transform-origin:center top;}
+@keyframes ropeSwing {0%{ transform: rotate(-6deg) translateY(0) }50%{ transform: rotate(6deg) translateY(6px) }100%{ transform: rotate(-6deg) translateY(0) }}
+@keyframes spideyBounce {0%{ transform: translateY(0) rotate(-6deg) }50%{ transform: translateY(6px) rotate(6deg) }100%{ transform: translateY(0) rotate(-6deg) }}
+.hanger.enter { animation:dropIn 900ms cubic-bezier(.2,.9,.3,1) forwards; }
+@keyframes dropIn {0%{ transform:translateX(-50%) translateY(-120px) scale(.9); opacity:0 }70%{ opacity:1 }100%{ transform:translateX(-50%) translateY(0) scale(1); opacity:1 }}
+
+/* ---------- confetti canvas ---------- */
 #confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:60}
 
-/* screens + transitions */
+/* ---------- screens ---------- */
 .screen{min-height:60vh;display:none;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
 .screen.active{display:block;opacity:1;transform:translateY(0)}
 .top{padding:6px 6px 2px;text-align:center}
 .result{font-weight:800;color:var(--accent-2);text-align:center;margin-top:8px}
 
 /* responsive */
-@media(min-width:760px){ .hero{max-width:560px} .envelope{width:260px;height:160px} .cake{width:320px} .hanger svg{width:110px;height:110px} }
+@media(min-width:820px){ .hero-wrap{max-width:700px} .hero-stand{width:96px;height:96px} .hero-swing{width:120px;height:120px} }
 </style>
 </head>
 <body>
 <canvas id="confetti"></canvas>
+
 <div class="container" role="main" aria-live="polite">
   <div class="topbar">
-    <div class="logo"><div class="dot"></div><div style="font-weight:800">Abhii's Birthday</div></div>
+    <div class="logo"><div class="dot" aria-hidden="true"></div><div style="font-weight:800">Abhii's Birthday</div></div>
     <div><button id="themeToggle" class="theme-toggle">Spider-Verse</button></div>
   </div>
 
-  <!-- ===== Screen 1: Welcome (page 1) ===== -->
+  <!-- SCREEN 1: Welcome (page 1) -->
   <section id="screen1" class="screen active">
     <div class="top">
       <div class="title">A Spider-Verse Birthday Letter <span aria-hidden="true">🕷️</span></div>
       <div class="subtitle">From my heart to my favourite hero</div>
     </div>
 
-    <div class="card glow center" style="padding:18px;max-width:520px;margin:14px auto">
-      <!-- Inline animated SVG hero (swing-like loop) -->
-      <svg class="hero" viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
-        <defs>
-          <linearGradient id="hgrad" x1="0" x2="1"><stop offset="0" stop-color="#ff7a8f"/><stop offset="1" stop-color="#ffcf5a"/></linearGradient>
-        </defs>
-        <rect rx="14" width="100%" height="100%" fill="transparent"/>
-        <!-- background subtle web -->
-        <g opacity="0.06" transform="translate(0,0)">
-          <path d="M30 140 C120 30, 300 40, 390 120" stroke="#ff7a8f" stroke-width="2" fill="none" stroke-linecap="round" stroke-opacity="0.9" />
-        </g>
+    <div class="hero-wrap">
+      <div class="card glow hero-card center" style="padding:24px;">
+        <div class="hero-title">Happy Birthday, Hero!</div>
+        <div class="hero-desc">In every universe, you’d still be the one saving the day.</div>
 
-        <!-- swinging spider-man group -->
-        <g transform="translate(70,40)" >
-          <!-- web line -->
-          <line x1="100" y1="-20" x2="100" y2="40" stroke="rgba(255,255,255,0.06)" stroke-width="2" />
-          <!-- animated group to mimic swinging -->
-          <g id="spidey" transform="translate(100,40)">
-            <g transform="translate(-24,-12)">
-              <!-- Body -->
-              <ellipse cx="24" cy="32" rx="22" ry="28" fill="#ff2a55" />
-              <!-- head -->
-              <circle cx="24" cy="8" r="10" fill="#d91a2b" />
-              <!-- mask eyes -->
-              <path d="M16 6 C20 2, 28 2, 32 6 C28 8, 20 8,16 6 Z" fill="#fff"/>
-              <!-- arms -->
-              <rect x="-6" y="20" width="8" height="6" rx="3" fill="#2b2b2b" transform="rotate(-24  -2 23)"/>
-              <rect x="40" y="20" width="8" height="6" rx="3" fill="#2b2b2b" transform="rotate(24 44 23)"/>
+        <!-- standing spidey top-right (like your screenshot) -->
+        <div class="hero-stand" aria-hidden="true">
+          <!-- stylized spidey sticker SVG (top-right) -->
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <!-- small outline -->
+            <g transform="translate(6,4) scale(.9)">
+              <circle cx="54" cy="14" r="10" fill="#d91a2b"/>
+              <ellipse cx="54" cy="40" rx="22" ry="26" fill="#ff2a55"/>
+              <path d="M43 12 C47 8, 61 8, 66 12 C61 14, 47 14,43 12 Z" fill="#fff"/>
+              <!-- suit details -->
+              <path d="M34 38 C54 28, 74 28, 94 36" stroke="#0b0b0b" stroke-width="2" fill="none"/>
+              <rect x="36" y="46" width="14" height="6" rx="3" fill="#09223b" transform="rotate(-24 43 49)"/>
+              <rect x="74" y="46" width="14" height="6" rx="3" fill="#09223b" transform="rotate(24 81 49)"/>
             </g>
-          </g>
-        </g>
+          </svg>
+        </div>
 
-        <!-- animate the spidey group to swing -->
-        <animateTransform xlink:href="#spidey" attributeName="transform" type="rotate"
-          values="-12 100 40; 12 100 40; -12 100 40" dur="2.1s" repeatCount="indefinite" />
-      </svg>
+        <!-- big CTA -->
+        <div style="margin-top:8px;text-align:center">
+          <button id="enterBtn" class="btn" style="font-size:16px;padding:14px 28px">Swing In!</button>
+        </div>
 
-      <div style="text-align:center;margin-top:8px">
-        <div style="font-weight:800;font-size:20px;color:#ffd1d7">Happy Birthday, Hero!</div>
-        <div style="color:var(--muted);margin-top:6px">In every universe, you’d still be the one saving the day.</div>
+        <!-- swinging sticker bottom-left -->
+        <div class="hero-swing" aria-hidden="true" style="pointer-events:none">
+          <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#ff7a8f"/><stop offset="1" stop-color="#ffcf5a"/></linearGradient></defs>
+            <g transform="translate(6,8) scale(.9)">
+              <line x1="8" y1="6" x2="70" y2="60" stroke="rgba(255,255,255,0.06)" stroke-width="2" stroke-linecap="round"/>
+              <g id="sw" transform="translate(30,40)">
+                <ellipse cx="22" cy="34" rx="20" ry="24" fill="#ff2a55" />
+                <circle cx="22" cy="10" r="9" fill="#d91a2b" />
+                <path d="M14 8 C18 4, 26 4, 30 8 C26 10, 18 10,14 8 Z" fill="#fff"/>
+                <rect x="2" y="30" width="8" height="6" rx="3" fill="#09223b" transform="rotate(-36 6 33)"/>
+                <rect x="36" y="30" width="8" height="6" rx="3" fill="#09223b" transform="rotate(22 40 33)"/>
+              </g>
+            </g>
+            <animateTransform xlink:href="#sw" attributeName="transform" type="rotate" values="-8 22 22; 8 22 22; -8 22 22" dur="2.2s" repeatCount="indefinite"/>
+          </svg>
+        </div>
+
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">Crafted by <strong>Abhii</strong> — Spider-Verse edition</div>
       </div>
-
-      <div style="display:flex;gap:10px;margin-top:14px">
-        <button id="enterBtn" class="btn">Swing In!</button>
-        <button id="demoBtn" class="btn ghost small">Preview 🎂</button>
-      </div>
-
-      <div style="margin-top:12px;font-size:13px;color:var(--muted)">Crafted by <strong>Abhii</strong> with great power & great responsibility 🕸️</div>
     </div>
   </section>
 
-  <!-- ===== Screen 2: Envelope (page 2) with hanging spider ===== -->
+  <!-- SCREEN 2: Envelope (page 2) with hanger -->
   <section id="screen2" class="screen">
     <div class="top">
       <div class="title">A Spider-Verse Birthday Letter <span aria-hidden="true">🕷️💌</span></div>
       <div class="subtitle">From my heart to my favourite hero</div>
     </div>
 
-    <div class="card center" style="padding:22px; position:relative;">
-      <!-- hanger: slides in from top and swings a little -->
-      <div id="hanger" class="hanger enter" aria-hidden="true" title="Tap the hanging spider">
+    <div class="card center" style="padding:22px; position:relative; overflow:visible;">
+      <div id="hanger" class="hanger enter" aria-hidden="false" title="Tap the hanging spider">
         <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <!-- rope -->
           <line x1="60" y1="0" x2="60" y2="36" class="web-line rope" />
-          <!-- spider (simplified) -->
           <g class="spidey" transform="translate(42,36)">
             <circle cx="18" cy="18" r="12" fill="#d91a2b" stroke="#8b0b12" stroke-width="1.6"/>
-            <!-- eyes -->
             <path d="M12 12 C14 8, 22 8, 26 12 C22 14, 14 14,12 12 Z" fill="#fff"/>
-            <!-- small limbs -->
             <path d="M6 18 L-2 12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/>
             <path d="M30 18 L38 12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/>
             <path d="M6 24 L-4 30" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/>
@@ -209,23 +187,36 @@ body::before{
           <div class="env-body"></div>
           <div class="env-glow"></div>
         </div>
-
-        <div class="small" style="margin-top:14px">Click to open your birthday transmission<br><strong>Spider-Special Delivery by Abhii</strong> 🕸️</div>
+        <div class="small">Click to open your birthday transmission<br><strong>Spider-Special Delivery by Abhii</strong> 🕸️</div>
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:6px"><button id="back1" class="btn ghost small">Back</button></div>
+    <div style="text-align:center;margin-top:12px"><button id="back1" class="btn ghost small">Back</button></div>
   </section>
 
-  <!-- ===== Screen 3: Letter (page 3) ===== -->
+  <!-- SCREEN 3: Letter (page 3) with sticker in top-right -->
   <section id="screen3" class="screen">
     <div class="top">
       <div class="title">Happy Birthday, Hero! ✨</div>
       <div class="subtitle">In every universe, you’d still be the one saving the day.</div>
     </div>
 
-    <div class="card" style="padding:16px">
-      <div id="letter" class="letter" aria-live="polite"></div>
+    <div class="card" style="padding:16px; position:relative;">
+      <!-- sticker top-right -->
+      <div class="hero-sticker" aria-hidden="true" style="right:14px;top:14px">
+        <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <g transform="translate(2,2) scale(.95)">
+            <circle cx="30" cy="10" r="6" fill="#d91a2b"/>
+            <ellipse cx="30" cy="32" rx="14" ry="18" fill="#ff2a55"/>
+            <path d="M24 8 C26 6, 34 6, 36 8 C34 9, 26 9,24 8 Z" fill="#fff"/>
+            <path d="M16 34 C28 26, 42 26, 54 34" stroke="#0b0b0b" stroke-width="1.6" fill="none"/>
+          </g>
+        </svg>
+      </div>
+
+      <div id="letter" class="letter" aria-live="polite">
+        <!-- typed lines will appear here -->
+      </div>
 
       <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
         <button id="toSurprise" class="btn">Time for your birthday surprise →</button>
@@ -234,7 +225,7 @@ body::before{
     </div>
   </section>
 
-  <!-- ===== Screen 4: Cake + Candle (page 4) ===== -->
+  <!-- SCREEN 4: Cake + Candle -->
   <section id="screen4" class="screen">
     <div class="top">
       <div class="title">Make a Wish, Hero ✨</div>
@@ -269,51 +260,38 @@ body::before{
 </div>
 
 <script>
-/* ===== Single-file app logic ===== */
+/* ---------- App logic ---------- */
 (() => {
-  // screens
-  const screens = { s1: document.getElementById('screen1'), s2: document.getElementById('screen2'), s3: document.getElementById('screen3'), s4: document.getElementById('screen4') };
+  const screens = { s1:document.getElementById('screen1'), s2:document.getElementById('screen2'), s3:document.getElementById('screen3'), s4:document.getElementById('screen4') };
+  const confettiCanvas = document.getElementById('confetti'); const ctx = confettiCanvas.getContext && confettiCanvas.getContext('2d');
+  function resizeCanvas(){ confettiCanvas.width = innerWidth; confettiCanvas.height = innerHeight; } window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
-  // confetti
-  const confettiCanvas = document.getElementById('confetti');
-  const ctx = confettiCanvas.getContext && confettiCanvas.getContext('2d');
-  let confettiParticles = [];
-  function resizeCanvas(){ confettiCanvas.width = innerWidth; confettiCanvas.height = innerHeight; }
-  window.addEventListener('resize', resizeCanvas); resizeCanvas();
-
-  function showScreen(name){
-    Object.values(screens).forEach(s => { s.classList.remove('active'); s.style.display='none'; });
-    const el = screens[name]; if(!el) return;
-    el.style.display='block'; requestAnimationFrame(()=> el.classList.add('active'));
-    window.scrollTo({top:0, behavior:'smooth'});
-  }
-
+  function showScreen(name){ Object.values(screens).forEach(s=>{ s.classList.remove('active'); s.style.display='none' }); const el = screens[name]; if(!el) return; el.style.display='block'; requestAnimationFrame(()=> el.classList.add('active')); window.scrollTo({top:0,behavior:'smooth'}); }
   showScreen('s1');
 
-  // nav buttons
+  // nav
   document.getElementById('enterBtn').addEventListener('click', ()=> showScreen('s2'));
   document.getElementById('back1').addEventListener('click', ()=> showScreen('s1'));
   document.getElementById('back2').addEventListener('click', ()=> showScreen('s2'));
   document.getElementById('back3').addEventListener('click', ()=> showScreen('s3'));
-  document.getElementById('demoBtn').addEventListener('click', ()=> showScreen('s4'));
+  document.getElementById('demoBtn')?.addEventListener('click', ()=> showScreen('s4'));
 
-  // envelope open animation
-  const envelope = document.getElementById('envelope');
-  const envFlap = document.getElementById('envFlap');
+  // envelope open
+  const envelope = document.getElementById('envelope'), envFlap=document.getElementById('envFlap'), letterEl=document.getElementById('letter');
   let envelopeOpened=false;
   function openEnvelope(skip=false){
     if(envelopeOpened) return;
     envelopeOpened=true;
     envFlap.style.transform='translateY(-18px) rotateX(20deg) scale(1.02)';
     envelope.style.transform='translateY(-10px) scale(.98)';
-    setTimeout(()=> showScreen('s3'), skip?120:650);
+    // ensure letter area cleared & typing resets
+    letterEl.innerHTML='';
+    setTimeout(()=> showScreen('s3'), skip?120:620);
   }
   envelope.addEventListener('click', ()=> openEnvelope(false));
   envelope.addEventListener('dblclick', ()=> openEnvelope(true));
-  envelope.addEventListener('keydown', (e)=> { if(e.key==='Enter') openEnvelope(true); });
 
-  // typed letter
-  const letterEl = document.getElementById('letter');
+  // typed letter lines
   const lines = [
     "Hey Hero —",
     "",
@@ -327,160 +305,75 @@ body::before{
   ];
   let typing=false;
   function typeLines(el, lines, li=0, ci=0){
-    if(li >= lines.length) return;
-    if(ci === 0){ const p = document.createElement('p'); p.className = 'typed-line'; el.appendChild(p); }
+    if(li>=lines.length) return;
+    if(ci===0){ const p=document.createElement('p'); p.className='typed-line'; el.appendChild(p); }
     const p = el.querySelectorAll('.typed-line')[li]; const line = lines[li];
-    if(ci < line.length){
-      p.textContent = line.slice(0, ci+1) + '▌';
-      setTimeout(()=> typeLines(el, lines, li, ci+1), 18 + Math.random()*40);
-    } else {
-      p.textContent = line;
-      setTimeout(()=> typeLines(el, lines, li+1, 0), 220);
-    }
+    if(ci < line.length){ p.textContent = line.slice(0,ci+1) + '▌'; setTimeout(()=> typeLines(el, lines, li, ci+1), 18 + Math.random()*40); }
+    else { p.textContent = line; setTimeout(()=> typeLines(el, lines, li+1, 0), 220); }
   }
-  screens.s3.addEventListener('transitionend', ()=> {
-    if(screens.s3.classList.contains('active') && !typing){ typing=true; typeLines(letterEl, lines); }
-  });
+  screens.s3.addEventListener('transitionend', ()=> { if(screens.s3.classList.contains('active') && !typing){ typing=true; typeLines(letterEl, lines); } });
 
-  document.getElementById('toSurprise').addEventListener('click', () => {
-    // finish typing quickly if not finished
+  document.getElementById('toSurprise').addEventListener('click', ()=> {
     if(letterEl.querySelectorAll('.typed-line').length < lines.length){
-      letterEl.innerHTML = ''; lines.forEach(l => { const p=document.createElement('p'); p.className='typed-line'; p.textContent=l; letterEl.appendChild(p); });
+      letterEl.innerHTML=''; lines.forEach(l=>{ const p=document.createElement('p'); p.className='typed-line'; p.textContent=l; letterEl.appendChild(p); });
     }
     showScreen('s4');
   });
 
-  // candle & confetti interactions
-  const candleWrap = document.getElementById('candleWrap');
-  const flame = document.getElementById('flame');
-  const result = document.getElementById('result');
-  const replayBtn = document.getElementById('replay');
-  const shareBtn = document.getElementById('share');
-  let extinguished = false;
-
-  candleWrap.addEventListener('click', () => extinguish());
-  replayBtn.addEventListener('click', resetCandle);
-  shareBtn.addEventListener('click', async () => {
+  // candle & confetti
+  const candleWrap=document.getElementById('candleWrap'), flame=document.getElementById('flame'), result=document.getElementById('result');
+  const replayBtn=document.getElementById('replay'), shareBtn=document.getElementById('share');
+  let extinguished=false;
+  candleWrap.addEventListener('click', ()=> extinguish());
+  replayBtn.addEventListener('click', ()=> resetCandle());
+  shareBtn.addEventListener('click', async ()=>{
     const text = "You got a Spider-Verse birthday surprise from Abhii 🎂🕷️";
     if(navigator.share) navigator.share({title:'Birthday Surprise', text});
-    else { try { await navigator.clipboard.writeText(text); alert('Share text copied'); } catch { alert('Sharing not available'); } }
+    else { try{ await navigator.clipboard.writeText(text); alert('Share text copied'); }catch(e){ alert('Sharing not available'); } }
   });
 
-  function extinguish(){
-    if(extinguished) return;
-    extinguished = true;
-    flame.style.transition = 'opacity .45s ease, transform .45s ease';
-    flame.style.opacity = '0';
-    flame.style.transform = 'translateY(-8px) scale(.7)';
-    spawnSmoke(candleWrap);
-    confettiBurst();
-    setTimeout(()=> { result.textContent = "Wish granted (in at least one universe). Happy Birthday!"; replayBtn.style.display = 'inline-block'; }, 650);
-  }
+  function extinguish(){ if(extinguished) return; extinguished=true; flame.style.transition='opacity .45s, transform .45s'; flame.style.opacity='0'; flame.style.transform='translateY(-8px) scale(.7)'; spawnSmoke(candleWrap); confettiBurst(); setTimeout(()=>{ result.textContent="Wish granted (in at least one universe). Happy Birthday!"; replayBtn.style.display='inline-block'; },650); }
   function resetCandle(){ extinguished=false; result.textContent=''; flame.style.opacity='1'; flame.style.transform='translateY(0) scale(1)'; replayBtn.style.display='none'; }
-  function spawnSmoke(parent){ const s = document.createElement('div'); s.className='smoke'; parent.appendChild(s); setTimeout(()=> s.remove(), 1100); }
+  function spawnSmoke(parent){ const s=document.createElement('div'); s.className='smoke'; parent.appendChild(s); setTimeout(()=> s.remove(), 1100); }
 
-  function confettiBurst(){
-    confettiParticles = []; const count = 28;
-    for(let i=0;i<count;i++){
-      confettiParticles.push({
-        x: innerWidth*0.5 + (Math.random()-0.5)*160,
-        y: innerHeight*0.45 + (Math.random()-0.5)*80,
-        vx:(Math.random()-0.5)*6, vy: - (6 + Math.random()*8),
-        size:6 + Math.random()*12, rot: Math.random()*360,
-        color: Math.random()>0.5 ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim()
-      });
-    }
-    runConfetti();
-  }
-  function runConfetti(){
-    if(!ctx) return;
-    const step = () => {
-      ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
-      confettiParticles.forEach((p,i) => {
-        p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.rot += p.vx*2;
-        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot * Math.PI/180); ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size); ctx.restore();
-        if(p.y > innerHeight + 30) confettiParticles.splice(i,1);
-      });
-      if(confettiParticles.length > 0) requestAnimationFrame(step);
-      else ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
-    };
-    requestAnimationFrame(step);
-  }
+  // confetti
+  let confettiParticles = [];
+  function confettiBurst(){ confettiParticles=[]; const count=36; for(let i=0;i<count;i++){ confettiParticles.push({ x: innerWidth*0.5 + (Math.random()-0.5)*240, y: innerHeight*0.35 + (Math.random()-0.5)*140, vx:(Math.random()-0.5)*8, vy:-(6+Math.random()*10), size:6+Math.random()*12, rot:Math.random()*360, color: Math.random()>0.6 ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim() }); } runConfetti(); }
+  function runConfetti(){ if(!ctx) return; const step=()=>{ ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); confettiParticles.forEach((p,i)=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.35; p.rot+=p.vx*2; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180); ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size); ctx.restore(); if(p.y>innerHeight+80) confettiParticles.splice(i,1); }); if(confettiParticles.length>0) requestAnimationFrame(step); else ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height); }; requestAnimationFrame(step); }
 
-  // voice blow (mic RMS)
+  // voice blow (RMS)
   let audioContext, analyser, micStream, dataArray, listening=false;
   const threshold = 0.12;
-  async function startListening(){
-    if(listening) return;
-    try{
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-      micStream = audioContext.createMediaStreamSource(stream);
-      analyser = audioContext.createAnalyser();
-      analyser.fftSize = 1024;
-      dataArray = new Uint8Array(analyser.frequencyBinCount);
-      micStream.connect(analyser);
-      listening = true;
-      monitorAudio();
-    } catch(e){ listening = false; }
-  }
-  function stopListening(){ try{ if(micStream && micStream.mediaStream) micStream.mediaStream.getTracks().forEach(t=>t.stop()); }catch(e){} try{ if(audioContext) audioContext.close(); }catch(e){} audioContext = analyser = micStream = null; listening = false; }
-  function monitorAudio(){
-    if(!listening || !analyser) return;
-    analyser.getByteTimeDomainData(dataArray);
-    let sum = 0;
-    for(let i=0;i<dataArray.length;i++){ const v = (dataArray[i] - 128) / 128; sum += v*v; }
-    const rms = Math.sqrt(sum / dataArray.length);
-    if(rms > threshold){ extinguish(); stopListening(); return; }
-    requestAnimationFrame(monitorAudio);
-  }
+  async function startListening(){ if(listening) return; try{ audioContext = new (window.AudioContext||window.webkitAudioContext)(); const stream = await navigator.mediaDevices.getUserMedia({audio:true}); micStream = audioContext.createMediaStreamSource(stream); analyser = audioContext.createAnalyser(); analyser.fftSize=1024; dataArray=new Uint8Array(analyser.frequencyBinCount); micStream.connect(analyser); listening=true; monitorAudio(); }catch(e){ listening=false; } }
+  function stopListening(){ try{ if(micStream && micStream.mediaStream) micStream.mediaStream.getTracks().forEach(t=>t.stop()); }catch(e){} try{ if(audioContext) audioContext.close(); }catch(e){} audioContext=analyser=micStream=null; listening=false; }
+  function monitorAudio(){ if(!listening||!analyser) return; analyser.getByteTimeDomainData(dataArray); let sum=0; for(let i=0;i<dataArray.length;i++){ const v=(dataArray[i]-128)/128; sum+=v*v; } const rms=Math.sqrt(sum/dataArray.length); if(rms>threshold){ extinguish(); stopListening(); return; } requestAnimationFrame(monitorAudio); }
 
-  // double-tap candle to request mic
-  let lastTap = 0;
-  candleWrap.addEventListener('touchstart', (e) => { const now = Date.now(); if(now - lastTap < 400) { requestMicAndListen(); } lastTap = now; }, {passive:true});
-  candleWrap.addEventListener('contextmenu', (e) => { e.preventDefault(); requestMicAndListen(); });
-  async function requestMicAndListen(){ if(listening) return; if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ alert('Microphone not supported'); return; } if(!confirm('Allow microphone so you can blow out the candle with your voice?')) return; try{ await startListening(); alert('Listening... blow into the mic to extinguish the candle!'); }catch(e){ console.warn(e); } }
+  // double-tap to request mic
+  let lastTap=0;
+  candleWrap.addEventListener('touchstart',(e)=>{ const now=Date.now(); if(now-lastTap<400){ requestMicAndListen(); } lastTap=now; },{passive:true});
+  async function requestMicAndListen(){ if(listening) return; if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ alert('Microphone not supported'); return; } if(!confirm('Allow microphone so you can blow out the candle with your voice?')) return; try{ await startListening(); alert('Listening... blow into mic to extinguish the candle'); }catch(e){ console.warn(e); } }
 
-  // hanger interactions: tap to pull up / drop
-  const hanger = document.getElementById('hanger');
-  let hanging = true;
-  hanger && hanger.addEventListener('click', () => {
-    // toggle pull up / drop
-    if(!hanging){
-      hanger.style.transition = 'transform .5s ease'; hanger.style.transform = 'translateX(-50%) translateY(0)'; hanging = true;
-    } else {
-      hanger.style.transition = 'transform .75s cubic-bezier(.2,.8,.2,1)'; hanger.style.transform = 'translateX(-50%) translateY(-160px)'; hanging = false;
-    }
-  });
+  // hanger toggle
+  const hanger = document.getElementById('hanger'); let hanging=true;
+  hanger && hanger.addEventListener('click', ()=> { if(hanging){ hanger.style.transform = 'translateX(-50%) translateY(-160px)'; hanging=false; } else { hanger.style.transform = 'translateX(-50%) translateY(0)'; hanging=true; }});
 
   // theme toggle
-  const themeToggle = document.getElementById('themeToggle');
-  themeToggle.addEventListener('click', ()=> {
-    const root = document.documentElement;
-    if(root.classList.contains('deadpool')) { root.classList.remove('deadpool'); themeToggle.textContent = 'Spider-Verse'; }
-    else { root.classList.add('deadpool'); themeToggle.textContent = 'Deadpool'; }
+  document.getElementById('themeToggle').addEventListener('click', ()=> {
+    const root=document.documentElement;
+    if(root.classList.contains('deadpool')){ root.classList.remove('deadpool'); document.getElementById('themeToggle').textContent='Spider-Verse'; }
+    else { root.classList.add('deadpool'); document.getElementById('themeToggle').textContent='Deadpool'; }
   });
 
-  // swipe nav for mobile
-  let xStart = null;
-  window.addEventListener('touchstart', e => { xStart = e.touches[0].clientX; }, {passive:true});
-  window.addEventListener('touchend', e => {
-    if(!xStart) return;
-    const xEnd = e.changedTouches[0].clientX; const dx = xEnd - xStart;
-    if(Math.abs(dx) > 60){
-      const key = Object.keys(screens).find(k => screens[k].classList.contains('active'));
-      if(!key) return;
-      if(dx < 0){ if(key === 's1') showScreen('s2'); else if(key === 's2') showScreen('s3'); else if(key === 's3') showScreen('s4'); }
-      else { if(key === 's4') showScreen('s3'); else if(key === 's3') showScreen('s2'); else if(key === 's2') showScreen('s1'); }
-    }
-    xStart = null;
-  }, {passive:true});
+  // swipe nav mobile
+  let xStart=null;
+  window.addEventListener('touchstart', e=> xStart=e.touches[0].clientX, {passive:true});
+  window.addEventListener('touchend', e=> { if(!xStart) return; const xEnd=e.changedTouches[0].clientX; const dx=xEnd-xStart; if(Math.abs(dx)>60){ const active=Object.keys(screens).find(k=>screens[k].classList.contains('active')); if(!active) return; if(dx<0){ if(active==='s1') showScreen('s2'); else if(active==='s2') showScreen('s3'); else if(active==='s3') showScreen('s4'); } else { if(active==='s4') showScreen('s3'); else if(active==='s3') showScreen('s2'); else if(active==='s2') showScreen('s1'); } } xStart=null; }, {passive:true});
 
   // stop mic on page hide
   window.addEventListener('pagehide', ()=> { try{ stopListening(); }catch(e){} });
 
-  // keyboard debug
-  document.addEventListener('keydown', e => { if(e.key === 'b') extinguish(); });
+  // small debug
+  document.addEventListener('keydown', e=> { if(e.key==='b') extinguish(); });
 
 })();
 </script>
