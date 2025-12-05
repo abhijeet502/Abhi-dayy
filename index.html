@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Spider-Verse Birthday — Abhii</title>
+<meta name="color-scheme" content="dark">
+<style>
+/* ===== Theme variables ===== */
+:root{
+  --bg-a:#6a0f12; --bg-b:#21050a;
+  --accent:#ff3f61; --accent-2:#ffcf5a;
+  --card-radius:22px; --text:#f6dfe1; --muted:rgba(246,223,225,0.78);
+  --maxw:540px;
+}
+:root.deadpool{ --bg-a:#120405; --bg-b:#070102; --accent:#d71f2a; --accent-2:#fff; --muted:rgba(255,255,255,0.9); }
+
+/* ===== Reset & layout ===== */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Roboto,Arial;color:var(--text);background:linear-gradient(180deg,var(--bg-a),var(--bg-b));-webkit-font-smoothing:antialiased}
+.container{max-width:var(--maxw);margin:8px auto;padding:18px;position:relative;z-index:10}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 50% 8%, rgba(255,255,255,0.02) 0, transparent 25%),
+    radial-gradient(circle at 10% 75%, rgba(255,255,255,0.02) 0, transparent 25%),
+    linear-gradient(180deg, rgba(0,0,0,0.08), transparent 40%);
+  mix-blend-mode:overlay;opacity:.95;
+}
+
+/* ===== Topbar ===== */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo .dot{width:14px;height:14px;border-radius:6px;background:var(--accent);box-shadow:0 8px 20px rgba(255,63,97,0.12)}
+.theme-toggle{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:12px;color:var(--muted);font-weight:700}
+
+/* ===== Cards & UI ===== */
+.card{background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(0,0,0,0.6));border-radius:var(--card-radius);padding:16px;margin:16px 0;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 40px rgba(0,0,0,0.6);position:relative;overflow:visible}
+.card.glow{box-shadow:0 20px 60px rgba(255,63,97,0.06),inset 0 4px 20px rgba(255,63,97,0.03)}
+.center{display:flex;align-items:center;justify-content:center;flex-direction:column}
+.title{font-weight:800;font-size:24px;color:#ffb3bd;text-shadow:0 6px 24px rgba(255,63,97,0.06);margin:6px 0}
+.subtitle{font-size:13px;color:var(--muted);margin:0}
+
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:40px;background:linear-gradient(180deg,var(--accent),#b0112a);color:#fff;border:none;cursor:pointer;font-weight:800;gap:10px}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+.btn.small{padding:8px 12px;font-size:13px}
+
+/* ===== Hero animated SVG ===== */
+.hero{width:100%;max-width:420px;border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,0.6);display:block;margin:10px auto}
+
+/* ===== Envelope ===== */
+.envelope{width:220px;height:130px;border-radius:14px;position:relative;background:linear-gradient(180deg,#0b0b10,#0f0f14);box-shadow:0 18px 50px rgba(0,0,0,0.6), inset 0 4px 12px rgba(255,255,255,0.02);cursor:pointer;transition:transform .28s}
+.envelope:hover{transform:translateY(-8px)}
+.env-flap{position:absolute;left:0;right:0;top:-6px;height:70px;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(180deg,#4a080d,#a80b12);border-radius:14px;transition:transform .45s}
+.env-body{position:absolute;left:12px;right:12px;top:18px;bottom:12px;background:linear-gradient(180deg,#051018,#07111a);border-radius:8px}
+.env-glow{position:absolute;inset:-2px;border-radius:14px;box-shadow:0 0 48px rgba(255,63,97,0.09)}
+.small{font-size:13px;color:var(--muted);margin-top:10px;text-align:center}
+
+/* ===== Hanging spider / slider (page 2) ===== */
+.hanger {position:absolute; left:50%; top:-6px; transform:translateX(-50%); pointer-events:auto; z-index:30;}
+.hanger svg {width:84px; height:84px; display:block; transform-origin:center top; will-change:transform; cursor:pointer;}
+.web-line {stroke:rgba(255,255,255,0.06); stroke-width:2; stroke-linecap:round;}
+.hanger .rope {transform-origin:50% 0; animation:ropeSwing 2200ms ease-in-out infinite;}
+.hanger .spidey {animation:spideyBounce 2200ms ease-in-out infinite; transform-origin:center top;}
+@keyframes ropeSwing {
+  0%{ transform: rotate(-6deg) translateY(0) }
+  50%{ transform: rotate(6deg) translateY(6px) }
+  100%{ transform: rotate(-6deg) translateY(0) }
+}
+@keyframes spideyBounce {
+  0%{ transform: translateY(0) rotate(-6deg) }
+  50%{ transform: translateY(6px) rotate(6deg) }
+  100%{ transform: translateY(0) rotate(-6deg) }
+}
+.hanger.enter { animation:dropIn 900ms cubic-bezier(.2,.9,.3,1) forwards; }
+@keyframes dropIn {
+  0%{ transform:translateX(-50%) translateY(-120px) scale(.9); opacity:0 }
+  70%{ opacity:1 }
+  100%{ transform:translateX(-50%) translateY(0) scale(1); opacity:1 }
+}
+
+/* ===== letter + cake styles ===== */
+.letter{min-height:220px;font-size:15px;color:var(--muted);line-height:1.6;padding:8px 6px}
+.typed-line{margin:8px 0}
+.cake-stage{display:flex;flex-direction:column;align-items:center;gap:12px;padding:12px}
+.cake{width:260px;position:relative;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6))}
+.candle-wrap{position:absolute;right:20px;top:-38px;display:flex;flex-direction:column;align-items:center}
+.candle{width:8px;height:36px;border-radius:3px;background:linear-gradient(180deg,#ffdba4,#ff9f6a);box-shadow:0 6px 18px rgba(0,0,0,0.45)}
+.flame{width:18px;height:18px;border-radius:50%;margin-bottom:6px;filter:blur(.6px);transform-origin:center;animation:flameF 260ms infinite;background:radial-gradient(circle at 35% 30%, #ffd67a,#ff7a3f)}
+@keyframes flameF{0%{transform:translateY(0) scale(1)}50%{transform:translateY(-2px) scale(.96)}100%{transform:translateY(0) scale(1)}}
+.smoke{position:absolute;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:rgba(220,220,220,0.6);animation:smokeRise 900ms forwards}
+@keyframes smokeRise{0%{opacity:1;transform:translateY(0) scale(.7)}100%{opacity:0;transform:translateY(-70px) scale(1.6)}}
+
+/* confetti canvas */
+#confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:60}
+
+/* screens + transitions */
+.screen{min-height:60vh;display:none;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.screen.active{display:block;opacity:1;transform:translateY(0)}
+.top{padding:6px 6px 2px;text-align:center}
+.result{font-weight:800;color:var(--accent-2);text-align:center;margin-top:8px}
+
+/* responsive */
+@media(min-width:760px){ .hero{max-width:560px} .envelope{width:260px;height:160px} .cake{width:320px} .hanger svg{width:110px;height:110px} }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="container" role="main" aria-live="polite">
+  <div class="topbar">
+    <div class="logo"><div class="dot"></div><div style="font-weight:800">Abhii's Birthday</div></div>
+    <div><button id="themeToggle" class="theme-toggle">Spider-Verse</button></div>
+  </div>
+
+  <!-- ===== Screen 1: Welcome (page 1) ===== -->
+  <section id="screen1" class="screen active">
+    <div class="top">
+      <div class="title">A Spider-Verse Birthday Letter <span aria-hidden="true">🕷️</span></div>
+      <div class="subtitle">From my heart to my favourite hero</div>
+    </div>
+
+    <div class="card glow center" style="padding:18px;max-width:520px;margin:14px auto">
+      <!-- Inline animated SVG hero (swing-like loop) -->
+      <svg class="hero" viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+        <defs>
+          <linearGradient id="hgrad" x1="0" x2="1"><stop offset="0" stop-color="#ff7a8f"/><stop offset="1" stop-color="#ffcf5a"/></linearGradient>
+        </defs>
+        <rect rx="14" width="100%" height="100%" fill="transparent"/>
+        <!-- background subtle web -->
+        <g opacity="0.06" transform="translate(0,0)">
+          <path d="M30 140 C120 30, 300 40, 390 120" stroke="#ff7a8f" stroke-width="2" fill="none" stroke-linecap="round" stroke-opacity="0.9" />
+        </g>
+
+        <!-- swinging spider-man group -->
+        <g transform="translate(70,40)" >
+          <!-- web line -->
+          <line x1="100" y1="-20" x2="100" y2="40" stroke="rgba(255,255,255,0.06)" stroke-width="2" />
+          <!-- animated group to mimic swinging -->
+          <g id="spidey" transform="translate(100,40)">
+            <g transform="translate(-24,-12)">
+              <!-- Body -->
+              <ellipse cx="24" cy="32" rx="22" ry="28" fill="#ff2a55" />
+              <!-- head -->
+              <circle cx="24" cy="8" r="10" fill="#d91a2b" />
+              <!-- mask eyes -->
+              <path d="M16 6 C20 2, 28 2, 32 6 C28 8, 20 8,16 6 Z" fill="#fff"/>
+              <!-- arms -->
+              <rect x="-6" y="20" width="8" height="6" rx="3" fill="#2b2b2b" transform="rotate(-24  -2 23)"/>
+              <rect x="40" y="20" width="8" height="6" rx="3" fill="#2b2b2b" transform="rotate(24 44 23)"/>
+            </g>
+          </g>
+        </g>
+
+        <!-- animate the spidey group to swing -->
+        <animateTransform xlink:href="#spidey" attributeName="transform" type="rotate"
+          values="-12 100 40; 12 100 40; -12 100 40" dur="2.1s" repeatCount="indefinite" />
+      </svg>
+
+      <div style="text-align:center;margin-top:8px">
+        <div style="font-weight:800;font-size:20px;color:#ffd1d7">Happy Birthday, Hero!</div>
+        <div style="color:var(--muted);margin-top:6px">In every universe, you’d still be the one saving the day.</div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button id="enterBtn" class="btn">Swing In!</button>
+        <button id="demoBtn" class="btn ghost small">Preview 🎂</button>
+      </div>
+
+      <div style="margin-top:12px;font-size:13px;color:var(--muted)">Crafted by <strong>Abhii</strong> with great power & great responsibility 🕸️</div>
+    </div>
+  </section>
+
+  <!-- ===== Screen 2: Envelope (page 2) with hanging spider ===== -->
+  <section id="screen2" class="screen">
+    <div class="top">
+      <div class="title">A Spider-Verse Birthday Letter <span aria-hidden="true">🕷️💌</span></div>
+      <div class="subtitle">From my heart to my favourite hero</div>
+    </div>
+
+    <div class="card center" style="padding:22px; position:relative;">
+      <!-- hanger: slides in from top and swings a little -->
+      <div id="hanger" class="hanger enter" aria-hidden="true" title="Tap the hanging spider">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- rope -->
+          <line x1="60" y1="0" x2="60" y2="36" class="web-line rope" />
+          <!-- spider (simplified) -->
+          <g class="spidey" transform="translate(42,36)">
+            <circle cx="18" cy="18" r="12" fill="#d91a2b" stroke="#8b0b12" stroke-width="1.6"/>
+            <!-- eyes -->
+            <path d="M12 12 C14 8, 22 8, 26 12 C22 14, 14 14,12 12 Z" fill="#fff"/>
+            <!-- small limbs -->
+            <path d="M6 18 L-2 12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M30 18 L38 12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M6 24 L-4 30" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M30 24 L40 30" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div id="envelope" class="envelope" role="button" tabindex="0" aria-label="Open envelope">
+          <svg style="position:absolute;left:0;top:0;width:100%;height:100%;border-radius:12px;opacity:0.04;pointer-events:none" viewBox="0 0 220 130" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="e1" x1="0" x2="1"><stop offset="0" stop-color="#ff7a8f"/><stop offset="1" stop-color="#ffcf5a"/></linearGradient></defs>
+            <rect x="0" y="0" width="220" height="130" rx="12" fill="#06060a"/>
+            <path d="M10 12 L110 72 L210 12" stroke="url(#e1)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div class="env-flap" id="envFlap"></div>
+          <div class="env-body"></div>
+          <div class="env-glow"></div>
+        </div>
+
+        <div class="small" style="margin-top:14px">Click to open your birthday transmission<br><strong>Spider-Special Delivery by Abhii</strong> 🕸️</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:6px"><button id="back1" class="btn ghost small">Back</button></div>
+  </section>
+
+  <!-- ===== Screen 3: Letter (page 3) ===== -->
+  <section id="screen3" class="screen">
+    <div class="top">
+      <div class="title">Happy Birthday, Hero! ✨</div>
+      <div class="subtitle">In every universe, you’d still be the one saving the day.</div>
+    </div>
+
+    <div class="card" style="padding:16px">
+      <div id="letter" class="letter" aria-live="polite"></div>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+        <button id="toSurprise" class="btn">Time for your birthday surprise →</button>
+        <button id="back2" class="btn ghost small">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Screen 4: Cake + Candle (page 4) ===== -->
+  <section id="screen4" class="screen">
+    <div class="top">
+      <div class="title">Make a Wish, Hero ✨</div>
+      <div class="subtitle">Tap the candle or blow into the mic to extinguish it</div>
+    </div>
+
+    <div class="card" style="padding:18px">
+      <div class="cake-stage">
+        <div class="badge" style="position:absolute;left:18px;top:-26px;background:rgba(0,0,0,0.36);padding:6px 10px;border-radius:10px;color:var(--accent-2);font-weight:800;border:1px solid rgba(255,255,255,0.04)">🕷️ Abhii</div>
+
+        <img alt="cake" style="width:86%;height:auto;pointer-events:none" src="data:image/svg+xml;utf8,<?xml version='1.0'?> <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 140'><defs><linearGradient id='g2' x1='0' x2='1'><stop offset='0' stop-color='%2322030a'/><stop offset='1' stop-color='%234a0710'/></linearGradient></defs><g transform='translate(10,10)'><rect x='20' y='40' width='180' height='60' rx='12' fill='url(%23g2)' stroke='%232b0b12' stroke-width='2'/><ellipse cx='110' cy='40' rx='70' ry='18' fill='%23380711'/><g transform='translate(150,8)'><rect x='-4' y='32' width='8' height='34' rx='2' fill='%23ffdba4'/><circle cx='0' cy='24' r='8' fill='%23ffd67a'/></g><text x='28' y='24' fill='%23ffb3bd' font-family='sans-serif' font-size='12' font-weight='700'>Spider Cake</text></g></svg>" />
+
+        <div class="candle-wrap" id="candleWrap" title="Tap to blow">
+          <div id="flame" class="flame" aria-hidden="true"></div>
+          <div id="candle" class="candle" role="button" aria-label="Candle"></div>
+        </div>
+
+        <div id="result" class="result" aria-live="polite"></div>
+
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+          <button id="replay" class="btn ghost small" style="display:none">Replay</button>
+          <button id="share" class="btn small">Share</button>
+          <button id="back3" class="btn ghost small">Back</button>
+        </div>
+
+        <div style="font-size:13px;color:var(--muted);margin-top:10px;text-align:center">Tip: double-tap candle to enable voice blowing (microphone permission required).</div>
+      </div>
+    </div>
+  </section>
+
+  <div style="text-align:center;font-size:13px;color:var(--muted);margin-top:12px">Made with ❤️ by Abhii — Spider-Verse edition</div>
+</div>
+
+<script>
+/* ===== Single-file app logic ===== */
+(() => {
+  // screens
+  const screens = { s1: document.getElementById('screen1'), s2: document.getElementById('screen2'), s3: document.getElementById('screen3'), s4: document.getElementById('screen4') };
+
+  // confetti
+  const confettiCanvas = document.getElementById('confetti');
+  const ctx = confettiCanvas.getContext && confettiCanvas.getContext('2d');
+  let confettiParticles = [];
+  function resizeCanvas(){ confettiCanvas.width = innerWidth; confettiCanvas.height = innerHeight; }
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+  function showScreen(name){
+    Object.values(screens).forEach(s => { s.classList.remove('active'); s.style.display='none'; });
+    const el = screens[name]; if(!el) return;
+    el.style.display='block'; requestAnimationFrame(()=> el.classList.add('active'));
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  showScreen('s1');
+
+  // nav buttons
+  document.getElementById('enterBtn').addEventListener('click', ()=> showScreen('s2'));
+  document.getElementById('back1').addEventListener('click', ()=> showScreen('s1'));
+  document.getElementById('back2').addEventListener('click', ()=> showScreen('s2'));
+  document.getElementById('back3').addEventListener('click', ()=> showScreen('s3'));
+  document.getElementById('demoBtn').addEventListener('click', ()=> showScreen('s4'));
+
+  // envelope open animation
+  const envelope = document.getElementById('envelope');
+  const envFlap = document.getElementById('envFlap');
+  let envelopeOpened=false;
+  function openEnvelope(skip=false){
+    if(envelopeOpened) return;
+    envelopeOpened=true;
+    envFlap.style.transform='translateY(-18px) rotateX(20deg) scale(1.02)';
+    envelope.style.transform='translateY(-10px) scale(.98)';
+    setTimeout(()=> showScreen('s3'), skip?120:650);
+  }
+  envelope.addEventListener('click', ()=> openEnvelope(false));
+  envelope.addEventListener('dblclick', ()=> openEnvelope(true));
+  envelope.addEventListener('keydown', (e)=> { if(e.key==='Enter') openEnvelope(true); });
+
+  // typed letter
+  const letterEl = document.getElementById('letter');
+  const lines = [
+    "Hey Hero —",
+    "",
+    "Across the Spider-Verse and every skyline, there’s one thing that never changes: you.",
+    "You’ve swung through the hard days, cracked jokes at the worst possible times, and still stood when others needed you most.",
+    "Tonight we celebrate the real superhero of this story — you.",
+    "",
+    "Wishes, webs, and unstoppable spirit. Make a wish that even the multiverse will notice.",
+    "",
+    "— With love, Abhii 🕷️"
+  ];
+  let typing=false;
+  function typeLines(el, lines, li=0, ci=0){
+    if(li >= lines.length) return;
+    if(ci === 0){ const p = document.createElement('p'); p.className = 'typed-line'; el.appendChild(p); }
+    const p = el.querySelectorAll('.typed-line')[li]; const line = lines[li];
+    if(ci < line.length){
+      p.textContent = line.slice(0, ci+1) + '▌';
+      setTimeout(()=> typeLines(el, lines, li, ci+1), 18 + Math.random()*40);
+    } else {
+      p.textContent = line;
+      setTimeout(()=> typeLines(el, lines, li+1, 0), 220);
+    }
+  }
+  screens.s3.addEventListener('transitionend', ()=> {
+    if(screens.s3.classList.contains('active') && !typing){ typing=true; typeLines(letterEl, lines); }
+  });
+
+  document.getElementById('toSurprise').addEventListener('click', () => {
+    // finish typing quickly if not finished
+    if(letterEl.querySelectorAll('.typed-line').length < lines.length){
+      letterEl.innerHTML = ''; lines.forEach(l => { const p=document.createElement('p'); p.className='typed-line'; p.textContent=l; letterEl.appendChild(p); });
+    }
+    showScreen('s4');
+  });
+
+  // candle & confetti interactions
+  const candleWrap = document.getElementById('candleWrap');
+  const flame = document.getElementById('flame');
+  const result = document.getElementById('result');
+  const replayBtn = document.getElementById('replay');
+  const shareBtn = document.getElementById('share');
+  let extinguished = false;
+
+  candleWrap.addEventListener('click', () => extinguish());
+  replayBtn.addEventListener('click', resetCandle);
+  shareBtn.addEventListener('click', async () => {
+    const text = "You got a Spider-Verse birthday surprise from Abhii 🎂🕷️";
+    if(navigator.share) navigator.share({title:'Birthday Surprise', text});
+    else { try { await navigator.clipboard.writeText(text); alert('Share text copied'); } catch { alert('Sharing not available'); } }
+  });
+
+  function extinguish(){
+    if(extinguished) return;
+    extinguished = true;
+    flame.style.transition = 'opacity .45s ease, transform .45s ease';
+    flame.style.opacity = '0';
+    flame.style.transform = 'translateY(-8px) scale(.7)';
+    spawnSmoke(candleWrap);
+    confettiBurst();
+    setTimeout(()=> { result.textContent = "Wish granted (in at least one universe). Happy Birthday!"; replayBtn.style.display = 'inline-block'; }, 650);
+  }
+  function resetCandle(){ extinguished=false; result.textContent=''; flame.style.opacity='1'; flame.style.transform='translateY(0) scale(1)'; replayBtn.style.display='none'; }
+  function spawnSmoke(parent){ const s = document.createElement('div'); s.className='smoke'; parent.appendChild(s); setTimeout(()=> s.remove(), 1100); }
+
+  function confettiBurst(){
+    confettiParticles = []; const count = 28;
+    for(let i=0;i<count;i++){
+      confettiParticles.push({
+        x: innerWidth*0.5 + (Math.random()-0.5)*160,
+        y: innerHeight*0.45 + (Math.random()-0.5)*80,
+        vx:(Math.random()-0.5)*6, vy: - (6 + Math.random()*8),
+        size:6 + Math.random()*12, rot: Math.random()*360,
+        color: Math.random()>0.5 ? getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() : getComputedStyle(document.documentElement).getPropertyValue('--accent-2').trim()
+      });
+    }
+    runConfetti();
+  }
+  function runConfetti(){
+    if(!ctx) return;
+    const step = () => {
+      ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+      confettiParticles.forEach((p,i) => {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.rot += p.vx*2;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot * Math.PI/180); ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size); ctx.restore();
+        if(p.y > innerHeight + 30) confettiParticles.splice(i,1);
+      });
+      if(confettiParticles.length > 0) requestAnimationFrame(step);
+      else ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // voice blow (mic RMS)
+  let audioContext, analyser, micStream, dataArray, listening=false;
+  const threshold = 0.12;
+  async function startListening(){
+    if(listening) return;
+    try{
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      micStream = audioContext.createMediaStreamSource(stream);
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 1024;
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+      micStream.connect(analyser);
+      listening = true;
+      monitorAudio();
+    } catch(e){ listening = false; }
+  }
+  function stopListening(){ try{ if(micStream && micStream.mediaStream) micStream.mediaStream.getTracks().forEach(t=>t.stop()); }catch(e){} try{ if(audioContext) audioContext.close(); }catch(e){} audioContext = analyser = micStream = null; listening = false; }
+  function monitorAudio(){
+    if(!listening || !analyser) return;
+    analyser.getByteTimeDomainData(dataArray);
+    let sum = 0;
+    for(let i=0;i<dataArray.length;i++){ const v = (dataArray[i] - 128) / 128; sum += v*v; }
+    const rms = Math.sqrt(sum / dataArray.length);
+    if(rms > threshold){ extinguish(); stopListening(); return; }
+    requestAnimationFrame(monitorAudio);
+  }
+
+  // double-tap candle to request mic
+  let lastTap = 0;
+  candleWrap.addEventListener('touchstart', (e) => { const now = Date.now(); if(now - lastTap < 400) { requestMicAndListen(); } lastTap = now; }, {passive:true});
+  candleWrap.addEventListener('contextmenu', (e) => { e.preventDefault(); requestMicAndListen(); });
+  async function requestMicAndListen(){ if(listening) return; if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ alert('Microphone not supported'); return; } if(!confirm('Allow microphone so you can blow out the candle with your voice?')) return; try{ await startListening(); alert('Listening... blow into the mic to extinguish the candle!'); }catch(e){ console.warn(e); } }
+
+  // hanger interactions: tap to pull up / drop
+  const hanger = document.getElementById('hanger');
+  let hanging = true;
+  hanger && hanger.addEventListener('click', () => {
+    // toggle pull up / drop
+    if(!hanging){
+      hanger.style.transition = 'transform .5s ease'; hanger.style.transform = 'translateX(-50%) translateY(0)'; hanging = true;
+    } else {
+      hanger.style.transition = 'transform .75s cubic-bezier(.2,.8,.2,1)'; hanger.style.transform = 'translateX(-50%) translateY(-160px)'; hanging = false;
+    }
+  });
+
+  // theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', ()=> {
+    const root = document.documentElement;
+    if(root.classList.contains('deadpool')) { root.classList.remove('deadpool'); themeToggle.textContent = 'Spider-Verse'; }
+    else { root.classList.add('deadpool'); themeToggle.textContent = 'Deadpool'; }
+  });
+
+  // swipe nav for mobile
+  let xStart = null;
+  window.addEventListener('touchstart', e => { xStart = e.touches[0].clientX; }, {passive:true});
+  window.addEventListener('touchend', e => {
+    if(!xStart) return;
+    const xEnd = e.changedTouches[0].clientX; const dx = xEnd - xStart;
+    if(Math.abs(dx) > 60){
+      const key = Object.keys(screens).find(k => screens[k].classList.contains('active'));
+      if(!key) return;
+      if(dx < 0){ if(key === 's1') showScreen('s2'); else if(key === 's2') showScreen('s3'); else if(key === 's3') showScreen('s4'); }
+      else { if(key === 's4') showScreen('s3'); else if(key === 's3') showScreen('s2'); else if(key === 's2') showScreen('s1'); }
+    }
+    xStart = null;
+  }, {passive:true});
+
+  // stop mic on page hide
+  window.addEventListener('pagehide', ()=> { try{ stopListening(); }catch(e){} });
+
+  // keyboard debug
+  document.addEventListener('keydown', e => { if(e.key === 'b') extinguish(); });
+
+})();
+</script>
+</body>
+</html>
