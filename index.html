@@ -6,17 +6,57 @@
 <title>Happy Birthday — Abhi</title>
 <link rel="icon" href="assets/album-art.png">
 <style>
-  :root{--accent1:#ff3a3a;--accent2:#ff7b7b;--muted:#c9bfc6}
+  :root{
+    --accent1:#ff3a3a;
+    --accent2:#ff7b7b;
+    --muted:#c9bfc6;
+    /* sprite frame settings:
+       --frame-width = width of one frame (px)
+       --frame-height = height of the sprite (px)
+       --frames = number of frames (2)
+       If your sprite uses different numbers, change them here.
+    */
+    --frame-width: 200px;
+    --frame-height: 200px;
+    --frames: 2;
+  }
+
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:linear-gradient(180deg,#5b0b0b 0%, #1f0606 70%);color:#fff}
-  .bg {position:fixed;inset:0;z-index:0;background:url('assets/web.png') center/cover no-repeat;opacity:.12;filter:blur(2px) saturate(.95)}
+  .bg {position:fixed;inset:0;z-index:0;background:url('assets/web.png') center/cover no-repeat;opacity:.12;filter:blur(2px) saturate(.95);pointer-events:none}
   .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;z-index:2}
   .card{width:100%;max-width:460px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.5));padding:18px;border-radius:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 18px 50px rgba(0,0,0,0.6)}
   .hero{display:flex;align-items:center;justify-content:center;position:relative}
   .art{width:160px;height:160px;border-radius:14px;object-fit:cover;box-shadow:0 16px 40px rgba(0,0,0,0.6)}
-  .spidey{position:absolute;right:8px;top:-18px;width:88px}
+  /* Spidey sprite container — places the visible frame */
+  .spidey-wrap{
+    position:absolute;
+    right:8px;
+    top:-18px;
+    width:var(--frame-width);
+    height:var(--frame-height);
+    overflow:hidden;
+    display:block;
+    transform-origin:center center;
+    pointer-events:none;
+  }
+  /* The sprite itself: total width = frame-width * frames */
+  .spidey-sprite{
+    display:block;
+    width:calc(var(--frame-width) * var(--frames));
+    height:var(--frame-height);
+    image-rendering: optimizeQuality;
+    /* run the steps animation to slide frames */
+    animation: sprite-animate 0.6s steps(var(--frames)) infinite;
+  }
+
+  @keyframes sprite-animate {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(-1 * var(--frame-width))); }
+  }
+
   .title{text-align:center;font-weight:800;color:var(--accent2);margin-top:12px}
   .cta{display:block;margin:14px auto 0;padding:12px 18px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#111;font-weight:800;border:none}
-  @media(max-width:420px){ .art{width:140px;height:140px} .spidey{width:72px;top:-8px;right:6px} }
+  @media(max-width:420px){ .art{width:140px;height:140px} .spidey-wrap{width:140px;height:140px;top:-8px;right:6px; --frame-width:140px; --frame-height:140px} .spidey-sprite{width:calc(var(--frame-width) * var(--frames));height:var(--frame-height)} }
 </style>
 </head>
 <body>
@@ -25,7 +65,10 @@
     <div class="card" role="main" aria-label="Birthday landing">
       <div class="hero">
         <img class="art" src="assets/album-art.png" alt="Abhi hero art">
-        <img id="spidey" class="spidey" src="assets/spidey-sprite.png" alt="swinging spidey">
+        <!-- sprite wrapper: contains the visible frame -->
+        <div class="spidey-wrap" id="spideyWrap" aria-hidden="true">
+          <img id="spideySprite" class="spidey-sprite" src="assets/spidey-sprite.png" alt="swinging spidey sprite">
+        </div>
       </div>
       <div class="title">🎂 Happy Birthday, Hero! — Abhi</div>
       <button class="cta" onclick="location.href='page2.html'">Swing In!</button>
@@ -38,12 +81,20 @@
   const web = document.getElementById('bgWeb');
   gsap.to(web, {rotation:360, duration:60, repeat:-1, ease:"none", transformOrigin:"50% 50%"});
 
-  // smooth spidey swing
-  const sp = document.getElementById('spidey');
+  // subtle bob / rotation applied to the wrapper for realism
+  const wrap = document.getElementById('spideyWrap');
+  // timeline with yoyo so it feels natural. This works together with the CSS sprite steps animation.
   gsap.timeline({repeat:-1, yoyo:true})
-    .to(sp, {rotation:8, y:6, duration:1.1, ease:"sine.inOut"})
-    .to(sp, {rotation:-6, y:0, duration:1.1, ease:"sine.inOut"})
-    .to(sp, {rotation:6, y:4, duration:1.1, ease:"sine.inOut"});
+    .to(wrap, {rotation:8, y:6, duration:1.1, ease:"sine.inOut"})
+    .to(wrap, {rotation:-6, y:0, duration:1.1, ease:"sine.inOut"})
+    .to(wrap, {rotation:6, y:4, duration:1.1, ease:"sine.inOut"});
+
+  // OPTIONAL: Pause sprite animation until user interaction on mobile (to avoid autoplay bans)
+  // If you want sprite always running, do nothing. If you want to pause until user clicks a button, uncomment:
+  // document.getElementById('spideySprite').style.animationPlayState = 'paused';
+  // document.querySelector('.cta').addEventListener('click', () => {
+  //   document.getElementById('spideySprite').style.animationPlayState = 'running';
+  // });
 </script>
 </body>
 </html>
