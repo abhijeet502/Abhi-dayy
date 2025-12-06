@@ -22,66 +22,48 @@
   h1{color:#ff6b6b;margin:0 0 10px 0;text-align:center;font-size:26px}
   .subtitle{text-align:center;color:#d9c9cf;margin-bottom:18px}
 
-  /* envelope area */
-  .envelope-stage{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+  /* envelope-stage layout: we want letter to drop in from top above the envelope */
+  .envelope-stage{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px; position:relative}
   .env-btn{background:transparent;border:none;padding:0;margin:0;cursor:pointer;outline:none}
-  .env-3d{
-    width:260px;height:220px;perspective:1000px;
-    display:flex;align-items:center;justify-content:center;
-  }
+  .env-3d{width:260px;height:220px;perspective:1000px;display:flex;align-items:center;justify-content:center;}
 
-  /* envelope image - front that flips */
   .env-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.9,.2,1)}
-  .env-inner.open{transform: rotateX(-170deg) translateY(-12px) scale(1.02)} /* open animation */
-
-  .env-front, .env-back{
-    position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;
-    display:flex;align-items:center;justify-content:center;overflow:hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-  }
-
+  .env-inner.open{transform: rotateX(-170deg) translateY(-12px) scale(1.02)}
+  .env-front, .env-back{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow: 0 30px 60px rgba(0,0,0,0.6);}
   .env-front img{width:100%;height:100%;object-fit:cover;display:block}
   .env-back{transform:rotateX(180deg);background:linear-gradient(180deg,#2b0c0c,#1a0606);border:1px solid rgba(255,255,255,0.02)}
 
-  /* the letter panel that appears under the opened envelope */
+  /* letter-wrap now sits above the envelope in DOM visually and comes down from the top */
   .letter-wrap{
-    width:100%;max-width:520px;margin:0 auto;margin-top:10px;
+    width:100%;max-width:520px;margin:0 auto;
     border-radius:12px;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.65));
     border:1px solid rgba(255,255,255,0.03);
-    min-height:300px;display:flex;align-items:center;justify-content:center;
-    opacity:0;transform:translateY(12px);transition:opacity .45s ease, transform .45s ease;
+    min-height:300px;display:flex;align-items:flex-start;justify-content:center;
+    opacity:0; transform: translateY(-18px); transition:opacity .45s ease, transform .45s ease;
+    pointer-events:none;
   }
-  .letter-wrap.visible{opacity:1;transform:translateY(0)}
+  .letter-wrap.visible{opacity:1; transform: translateY(0); pointer-events:auto;}
 
-  /* letter inner area — vertically centered */
-  .letter-inner{
-    width:100%;max-width:460px;height:320px;display:flex;align-items:center;justify-content:center;
-    position:relative;
-  }
+  .letter-inner{width:100%;max-width:460px;height:320px;display:flex;align-items:flex-start;justify-content:center;position:relative;}
 
-  /* letter box kept centered; inner 'scroll-area' will be auto-centered by script */
+  /* top-aligned letter box (typing from top) */
   .letter-box{
     width:100%;height:90%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.75));
     border-radius:12px;padding:22px;overflow:auto;color:#f1dfe2;
-    display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+    display:flex;flex-direction:column;align-items:flex-start; /* top start */
     box-shadow: inset 0 6px 18px rgba(0,0,0,0.35);
     font-size:15px;line-height:1.7;
     position:relative;
   }
 
-  /* typed text container */
-  .typed{white-space:pre-wrap;word-wrap:break-word; width:100%; max-height:100%;}
+  .typed{white-space:pre-wrap;word-wrap:break-word; width:100%;}
+  .center-anchor{display:none;} /* not used now */
 
-  /* center marker (hidden) used to compute center scroll */
-  .center-anchor{position:absolute;left:0;right:0;top:50%;height:1px;pointer-events:none;opacity:0}
-
-  /* small controls */
   .controls{display:flex;gap:12px;justify-content:center;margin-top:14px}
   .btn{padding:10px 16px;border-radius:999px;border:none;font-weight:800;cursor:pointer}
   .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#111}
   .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#d9c9cf}
 
-  /* responsive */
   @media(max-width:460px){
     .env-3d{width:210px;height:176px}
     .letter-wrap{min-height:260px}
@@ -98,30 +80,27 @@
         <div class="subtitle">From my heart to my favourite hero — click the envelope to open your birthday transmission.</div>
 
         <div class="envelope-stage">
-          <!-- ENVELOPE 3D BUTTON -->
-          <button id="envBtn" class="env-btn" aria-label="Open envelope (click or press enter)">
-            <div class="env-3d" aria-hidden="true">
-              <div id="envInner" class="env-inner" role="img" aria-hidden="true">
-                <!-- FRONT of envelope (the red envelope image you want) -->
-                <div class="env-front">
-                  <!-- Replace the src with your friend's red envelope image filename -->
-                  <img id="envImg" src="assets/envelope-red.png" alt="red envelope">
-                </div>
-                <!-- a subtle back face while flipping -->
-                <div class="env-back"></div>
-              </div>
-            </div>
-          </button>
 
-          <!-- LETTER that appears after open -->
+          <!-- LETTER is placed before envelope so it appears above and can slide down from top -->
           <div id="letter" class="letter-wrap" role="document" aria-live="polite" aria-hidden="true">
             <div class="letter-inner">
               <div id="letterBox" class="letter-box" tabindex="0">
                 <div id="typed" class="typed" aria-hidden="false"></div>
-                <div class="center-anchor" aria-hidden="true"></div>
               </div>
             </div>
           </div>
+
+          <!-- ENVELOPE 3D BUTTON -->
+          <button id="envBtn" class="env-btn" aria-label="Open envelope (click or press enter)">
+            <div class="env-3d" aria-hidden="true">
+              <div id="envInner" class="env-inner" role="img" aria-hidden="true">
+                <div class="env-front">
+                  <img id="envImg" src="assets/envelope-red.png" alt="red envelope">
+                </div>
+                <div class="env-back"></div>
+              </div>
+            </div>
+          </button>
 
           <div class="controls" aria-hidden="true">
             <button id="skipBtn" class="btn ghost">Skip Typing</button>
@@ -134,7 +113,7 @@
   </div>
 
 <script>
-  // The letter text — edit if needed
+  // letter text (unchanged)
   const LETTER_TEXT = `To my Birthday Hero
 
 Today marks another year of your incredible existence, and I couldn't be more grateful to be part of your story. You don't need a mask or a suit to be a hero — the way you care, laugh, and show up for people already makes your world brighter.
@@ -152,13 +131,15 @@ Abhi 💖🕷️`;
   const typedEl = document.getElementById('typed');
   const skipBtn = document.getElementById('skipBtn');
   const letterBox = document.getElementById('letterBox');
-  const centerAnchor = document.querySelector('.center-anchor');
 
   let typingTimer = null;
   let typingIndex = 0;
   let typingRunning = false;
+  // throttle page auto-scroll so we don't over-scroll
+  let lastPageScrollAt = 0;
 
-  // smart typing: types char-by-char and gently recenters the scroll so content stays visually in the middle
+  // type from top, scroll letter box to bottom as content grows,
+  // and when the letter box approaches viewport bottom, scroll the page a little.
   function startTyping(text, target, speed = 18) {
     typingRunning = true;
     typingIndex = 0;
@@ -167,79 +148,73 @@ Abhi 💖🕷️`;
       function step() {
         if (typingIndex >= text.length) {
           typingRunning = false;
-          // final center
-          centerLetterContent();
+          // ensure letter box scrolled to bottom at end
+          letterBox.scrollTop = letterBox.scrollHeight - letterBox.clientHeight;
           resolve();
           return;
         }
         const ch = text.charAt(typingIndex++);
         target.textContent += ch;
 
-        // gently keep letter content around center: we compute the middle point of scroll and nudge toward it
-        centerLetterContent();
+        // keep letter box scrolled to bottom so new text is visible
+        letterBox.scrollTop = letterBox.scrollHeight - letterBox.clientHeight;
 
-        // variable delay for slightly organic typing rhythm
+        // if the letter bottom goes below viewport, nudge the page down (throttled)
+        const rect = letter.getBoundingClientRect();
+        const gap = rect.bottom - (window.innerHeight - 48); // 48px bottom buffer
+        const now = Date.now();
+        if (gap > 0 && (now - lastPageScrollAt) > 220) {
+          lastPageScrollAt = now;
+          // scroll just enough to reveal the bottom
+          window.scrollBy({ top: Math.min(gap + 16, 180), left: 0, behavior: 'smooth' });
+        }
+
         const delay = speed + (Math.random() * 22 - 10);
-        typingTimer = setTimeout(step, Math.max(8, delay));
+        typingTimer = setTimeout(step, Math.max(6, delay));
       }
       step();
     });
   }
 
-  // compute a middle scroll target and approach it smoothly
-  function centerLetterContent() {
-    // If the letter content overflows, we attempt to keep the scroll such that the currently written area stays near the middle
-    const container = letterBox;
-    // desired top so content is visually centered — center anchor is at 50% of container
-    const centerY = (container.scrollHeight - container.clientHeight) / 2;
-    // gently approach that center to avoid jumpy motion
-    const newTop = Math.round(container.scrollTop + (centerY - container.scrollTop) * 0.28);
-    container.scrollTop = newTop;
-  }
-
-  // Open envelope: flip and reveal letter, then start typing
   async function openEnvelope() {
     if (envInner.classList.contains('open')) return;
     envInner.classList.add('open');
 
-    // short delay so flip starts before letter reveals
-    await new Promise(r => setTimeout(r, 520));
+    // reveal letter by sliding it down from top
     letter.classList.add('visible');
     letter.setAttribute('aria-hidden','false');
 
-    // start typing
+    // ensure letter in view (center-ish) before typing
+    setTimeout(()=> {
+      letter.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 200);
+
+    // small delay to let slide finish
+    await new Promise(r => setTimeout(r, 420));
+
+    // start typing from top
     await startTyping(LETTER_TEXT, typedEl, 18);
 
-    // once typing finishes, ensure a nice final center
-    centerLetterContent();
+    // done
+    letterBox.focus();
   }
 
-  // click or enter to open
   envBtn.addEventListener('click', () => openEnvelope());
   envBtn.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEnvelope(); } });
 
-  // skip typing
   skipBtn.addEventListener('click', () => {
     if (typingTimer) clearTimeout(typingTimer);
     if (typingRunning) {
       typedEl.textContent = LETTER_TEXT;
       typingRunning = false;
-      // center final text
-      setTimeout(()=> { letterBox.scrollTop = Math.max(0, (letterBox.scrollHeight - letterBox.clientHeight)/2); }, 20);
+      letterBox.scrollTop = letterBox.scrollHeight - letterBox.clientHeight;
+      // ensure page scrolled to show letter bottom if needed
+      setTimeout(()=> { letter.scrollIntoView({ block:'center', behavior:'smooth' }); }, 20);
     }
   });
 
-  // if envelope finishes flip, focus letter for keyboard users
-  envInner.addEventListener('transitionend', () => {
-    if (envInner.classList.contains('open')) {
-      setTimeout(()=> letterBox.focus(), 300);
-    }
-  });
-
-  // optional: open automatically if URL contains ?autoopen (helpful while testing)
-  if (location.search.includes('autoopen')) {
-    openEnvelope();
-  }
+  // optional: open automatically if ?autoopen present (handy for testing)
+  if (location.search.includes('autoopen')) openEnvelope();
 </script>
 </body>
 </html>
