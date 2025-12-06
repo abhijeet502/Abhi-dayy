@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Playlist — Abhi</title>
+<style>
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#5b0b0b,#1f0606);color:#fff}
+  .wrap{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:20px}
+  .card{width:100%;max-width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.5));padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,0.04)}
+  .track{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;margin-bottom:10px;background:rgba(255,255,255,0.02)}
+  .play{width:46px;height:46px;border-radius:10px;background:linear-gradient(90deg,#ff3a3a,#ff7b7b);display:grid;place-items:center;cursor:pointer}
+  .meta{flex:1}
+  .name{font-weight:700}
+  .artist{color:#c9bfc6;font-size:13px;margin-top:4px}
+  .progress{height:6px;background:rgba(255,255,255,0.04);border-radius:6px;margin-top:10px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#ff3a3a,#ff8a8a);border-radius:6px;transition:width .12s linear}
+  .big{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .btn{padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,#ff3a3a,#ff7b7b);color:#111;border:none;font-weight:800}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2 style="color:#ff6b6b;margin:0 0 12px 0">Birthday Vibes Playlist</h2>
+
+      <div class="track" data-src="audio/night-changes.mp3">
+        <div class="play">▶</div>
+        <div class="meta">
+          <div class="name">Night Changes</div>
+          <div class="artist">One Direction</div>
+          <div class="progress"><i></i></div>
+        </div>
+      </div>
+
+      <div class="track" data-src="audio/memories.mp3">
+        <div class="play">▶</div>
+        <div class="meta">
+          <div class="name">Memories</div>
+          <div class="artist">Maroon 5</div>
+          <div class="progress"><i></i></div>
+        </div>
+      </div>
+
+      <div class="track" data-src="audio/never-grow-up.mp3">
+        <div class="play">▶</div>
+        <div class="meta">
+          <div class="name">Never Grow Up</div>
+          <div class="artist">Taylor Swift</div>
+          <div class="progress"><i></i></div>
+        </div>
+      </div>
+
+      <!-- Add more tracks if you want -->
+      <div class="big">
+        <button id="prev" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:#c9bfc6">⟵ Prev</button>
+        <button id="playPause" class="btn">Play</button>
+        <button id="next" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:#c9bfc6">Next ⟶</button>
+      </div>
+
+    </div>
+  </div>
+
+<audio id="player" preload="metadata"></audio>
+
+<script>
+  const player = document.getElementById('player');
+  const trackEls = Array.from(document.querySelectorAll('.track'));
+  let currentIndex = -1;
+  let raf = null;
+
+  function setActive(idx){
+    trackEls.forEach((t,i)=>{
+      const btn = t.querySelector('.play');
+      if(i === idx && !player.paused){
+        btn.textContent = '⏸'; btn.style.opacity = 1;
+      } else {
+        btn.textContent = '▶'; btn.style.opacity = 0.95;
+        t.querySelector('.progress>i').style.width = '0%';
+      }
+    });
+  }
+
+  function playIndex(idx){
+    if(idx < 0 || idx >= trackEls.length) return;
+    const src = trackEls[idx].dataset.src;
+    if(!src) return;
+    if(currentIndex === idx && !player.paused){ player.pause(); return; }
+    player.src = src;
+    player.play().catch(e=>console.warn('play prevented', e));
+    currentIndex = idx;
+    setActive(idx);
+    updateProgressLoop();
+  }
+
+  function updateProgressLoop(){
+    cancelAnimationFrame(raf);
+    function step(){
+      if(currentIndex<0) return;
+      const el = trackEls[currentIndex];
+      if(player.duration && !isNaN(player.duration)){
+        const pct = Math.max(0, Math.min(100, (player.currentTime/player.duration)*100));
+        el.querySelector('.progress>i').style.width = pct + '%';
+      }
+      raf = requestAnimationFrame(step);
+    }
+    step();
+  }
+
+  trackEls.forEach((t,i)=>{
+    t.querySelector('.play').addEventListener('click', ()=> playIndex(i));
+    t.querySelector('.progress').addEventListener('click', (ev)=>{
+      if(currentIndex !== i){ playIndex(i); return; }
+      const rect = ev.currentTarget.getBoundingClientRect();
+      const x = ev.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, x / rect.width));
+      if(player.duration) player.currentTime = pct * player.duration;
+    });
+  });
+
+  player.addEventListener('play', ()=> { setActive(currentIndex); document.getElementById('playPause').textContent = 'Pause'; updateProgressLoop(); });
+  player.addEventListener('pause', ()=> { setActive(currentIndex); document.getElementById('playPause').textContent = 'Play'; cancelAnimationFrame(raf); });
+  player.addEventListener('ended', ()=> { let n = currentIndex + 1; if(n >= trackEls.length) n = 0; playIndex(n); });
+
+  document.getElementById('next').addEventListener('click', ()=> { let n = (currentIndex + 1) % trackEls.length; playIndex(n); });
+  document.getElementById('prev').addEventListener('click', ()=> { let p = (currentIndex - 1); if(p < 0) p = trackEls.length - 1; playIndex(p); });
+  document.getElementById('playPause').addEventListener('click', ()=> { if(player.paused){ if(currentIndex === -1) playIndex(0); else player.play(); } else player.pause(); });
+
+  // space toggles play/pause
+  window.addEventListener('keydown', (e)=>{ if(e.code === 'Space'){ e.preventDefault(); if(player.paused){ if(currentIndex === -1) playIndex(0); else player.play(); } else player.pause(); } });
+</script>
+</body>
+</html>
