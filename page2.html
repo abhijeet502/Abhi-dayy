@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Envelope — Abhi</title>
+<style>
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#5b0b0b,#1f0606);color:#fff}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{max-width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.5));padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,0.04)}
+  .env{display:block;margin:8px auto;width:280px;cursor:pointer;border-radius:12px}
+  .btns{display:flex;gap:10px;justify-content:center;margin-top:12px}
+  .btn{padding:10px 14px;border-radius:999px;border:none;font-weight:700}
+  .btn.primary{background:linear-gradient(90deg,#ff3a3a,#ff7b7b);color:#111}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#c9bfc6}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Envelope stage">
+      <h2 style="color:#ff6b6b;margin:0 0 8px 0">A Spider-Verse Birthday Letter</h2>
+      <img id="env" class="env" src="assets/album-art.png" alt="envelope/teaser" onclick="openEnv()">
+      <div id="teaser" style="display:none;color:#d9c9cf;margin-top:10px">
+        Close your eyes for a moment and make your birthday wish, hero. Then open the letter to read something from my heart.
+      </div>
+      <div class="btns">
+        <button class="btn primary" onclick="location.href='page3.html'">Make a Wish</button>
+        <button class="btn ghost" onclick="location.href='page4.html'">Open Letter</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function openEnv(){
+    // swap image for a quick open feel (use same asset or a different envelope image if you have it)
+    document.getElementById('env').src = 'assets/album-art.png';
+    document.getElementById('teaser').style.display = 'block';
+    // play optional chime if present
+    const chime = new Audio('audio/open-chime.mp3');
+    chime.play().catch(()=>{/* ignore */});
+  }
+</script>
+</body>
+</html>
