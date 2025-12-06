@@ -6,49 +6,113 @@
 <title>Happy Birthday — Abhi</title>
 <link rel="icon" href="assets/album-art.png">
 
+<!--
+  Upgraded index.html:
+  - richer card (glow + red stroke)
+  - web + star overlay
+  - improved captions & friend-style copy
+  - smoother GSAP animations for background, card entrance, spidey bob/pulse, CTA pulse
+  - uses your assets/album-art.png and assets/web.png; spidey uses the base64 you gave (or replace with assets/spidey.png)
+-->
+
 <style>
   :root{
     --accent1:#ff3a3a;
     --accent2:#ff7b7b;
     --muted:#c9bfc6;
+    --card-bg: rgba(10,6,6,0.55);
+    --stroke: rgba(255,90,90,0.18);
   }
 
   html,body{
     height:100%;
     margin:0;
-    font-family:Inter,system-ui,Segoe UI,Arial;
+    font-family:Inter,system-ui,Segoe UI,Arial, sans-serif;
     background:linear-gradient(180deg,#5b0b0b 0%, #1f0606 70%);
     color:#fff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
   }
-  
-  .bg{
+
+  /* spinning web background (keeps your web.png) */
+  .bg {
     position:fixed;
     inset:0;
     z-index:0;
-    background:url('assets/web.png') center/cover no-repeat;
+    background-image: url('assets/web.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     opacity:.12;
-    filter:blur(2px) saturate(.95);
+    filter: blur(2px) saturate(.95);
     pointer-events:none;
+    transform-origin:center center;
   }
 
+  /* subtle decorative star layer (CSS only) */
+  .stars {
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,180,160,0.04) 1px, transparent 1px),
+      radial-gradient(rgba(255,120,120,0.02) 1px, transparent 1px);
+    background-size: 200px 200px, 480px 480px;
+    opacity:0.12;
+    mix-blend-mode:overlay;
+  }
+
+  /* page layout */
   .wrap{
     min-height:100vh;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:24px;
+    padding:28px;
     position:relative;
     z-index:2;
   }
 
+  /* Card with red glossy stroke */
   .card{
     width:100%;
-    max-width:460px;
-    background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.5));
-    padding:18px;
-    border-radius:18px;
+    max-width:520px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.55));
+    padding:22px;
+    border-radius:22px;
     border:1px solid rgba(255,255,255,0.04);
-    box-shadow:0 18px 50px rgba(0,0,0,0.6);
+    box-shadow:
+      0 18px 60px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.02);
+    position:relative;
+    overflow:visible;
+    /* decorative red stroke */
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:22px;
+    padding:2px;
+    background: linear-gradient(90deg, rgba(255,50,50,0.06), rgba(255,120,120,0.04));
+    -webkit-mask:
+      linear-gradient(#000,#000) content-box,
+      linear-gradient(#000,#000);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+    box-shadow: 0 6px 30px rgba(255,0,0,0.03);
+  }
+
+  /* Inner dark rounded panel (like reference) */
+  .panel{
+    background: linear-gradient(180deg, rgba(10,10,12,0.92), rgba(5,5,7,0.95));
+    border-radius:18px;
+    padding:20px;
+    border: 1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
   }
 
   .hero{
@@ -57,83 +121,206 @@
     justify-content:center;
     position:relative;
     height:220px;
+    gap:18px;
   }
 
   .art{
-    width:160px;
-    height:160px;
-    border-radius:14px;
+    width:168px;
+    height:168px;
+    border-radius:16px;
     object-fit:cover;
-    box-shadow:0 16px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    border: 8px solid rgba(255,255,255,0.03);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.1));
   }
 
-  /* NEW — Transparent Spidey Base64 Image */
-  .spidey{
+  /* Spidey wrapper — nicer shadow, rounded mask, and rotate pivot */
+  .spidey-wrap{
     position:absolute;
-    right:8px;
-    top:-18px;
-    width:110px;
-    height:auto;
+    right:12px;
+    top:-26px;
+    width:120px;
+    height:120px;
+    border-radius:14px;
+    overflow:visible; /* allow sprite to rotate out */
     pointer-events:none;
-    filter:drop-shadow(0 18px 30px rgba(0,0,0,0.45));
-    will-change:transform;
+    transform-origin:center center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
 
+  /* the image itself — keep it transparent PNG or base64 */
+  .spidey{
+    width:120px;
+    height:auto;
+    display:block;
+    filter: drop-shadow(0 18px 30px rgba(0,0,0,0.45));
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Header/copy styles */
   .title{
     text-align:center;
     font-weight:800;
     color:var(--accent2);
+    margin-top:6px;
+    font-size:20px;
+  }
+
+  .lead{
+    margin-top:14px;
+    color: #f3c2c2;
+    text-align:center;
+    font-weight:700;
+    letter-spacing:0.1px;
+  }
+
+  .sub{
     margin-top:12px;
+    color: rgba(255,255,255,0.85);
+    text-align:center;
+    font-size:15px;
+    line-height:1.5;
   }
 
   .cta{
-    display:block;
-    margin:14px auto 0;
-    padding:12px 18px;
+    display:inline-block;
+    margin:18px auto 4px;
+    padding:12px 22px;
     border-radius:999px;
     background:linear-gradient(90deg,var(--accent1),var(--accent2));
     color:#111;
     font-weight:800;
     border:none;
+    cursor:pointer;
+    box-shadow: 0 12px 30px rgba(255,70,70,0.12);
+    transition: transform .14s ease;
+    display:block;
+    width:170px;
+    text-align:center;
+  }
+
+  .cta:active{ transform: translateY(2px) scale(.995); }
+
+  /* small footer text */
+  .byline{
+    margin-top:18px;
+    text-align:center;
+    color:rgba(255,255,255,0.6);
+    font-size:13px;
+  }
+
+  /* CTA pulse animation via CSS fallback (GSAP also pulses) */
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 12px 30px rgba(255,70,70,0.08); }
+    50% { transform: scale(1.03); box-shadow: 0 20px 40px rgba(255,70,70,0.14); }
+    100% { transform: scale(1); box-shadow: 0 12px 30px rgba(255,70,70,0.08); }
+  }
+
+  .cta.pulse { animation: pulse 2.2s infinite; }
+
+  /* responsive */
+  @media (max-width:420px){
+    .card{ padding:16px; border-radius:16px; }
+    .hero{ height:170px; }
+    .art{ width:140px; height:140px; border-radius:12px; }
+    .spidey-wrap{ width:92px; height:92px; top:-16px; right:8px; }
+    .spidey{ width:92px; }
+    .title{ font-size:18px; }
+    .lead{ font-size:14px; }
+    .sub{ font-size:14px; padding:0 6px; }
   }
 </style>
 </head>
 
 <body>
-  <div class="bg" id="bgWeb"></div>
+  <!-- decorative layers -->
+  <div class="bg" id="bgWeb" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
 
   <div class="wrap">
-    <div class="card">
-      <div class="hero">
+    <div class="card panel" id="mainCard" role="main" aria-label="Birthday landing card">
+      <div class="hero" aria-hidden="false">
         <img class="art" src="assets/album-art.png" alt="Abhi hero art">
 
-        <!-- BASE64 TRANSPARENT SPIDEY -->
-        <img id="spidey" class="spidey"
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAYAAAC2+1bKAAAACXBIWXMAAAsSAAALEgHS3X78AAAEtUlEQVR4nO3dMW4bSRTG8XeZgKIgNSE5FUWUFneG98GX2YeliYg+CHF7//yBzQltpCZRwhuqjs91tDXTH2vE8pNS57S30PwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwL/IfWby0qBWcPcR7ZrgCa5W2mA3YtN3tX5+fny8vLz9tD2QQeGkEKkPyiSlaT89SvxmqULC1tk6JrT3Kqr+5ra9QsKwyTjPlAmUWkPylS1aT5tRvzGqUnSxtk6I7T3Kqr+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6I7T3Kup+6rb9QsKw6UXeZpjO21vb2dXV1dzc3OTk5Hc+bjY2NvUOTs7e12b2roaqd7ZmdnfkXtFbdM4tSxstJrTnKqr+6rb9QtKwyTDPkAmUWkPylS1aT59RvzGqUrCxtk6J7T3Kqr+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QtKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6I7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6I7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKw6UHeZpjG21tbm5ubm9vb29fX15+fn5uF3xoYGBoaMd7eDg0G48PE5+5Ojqa+92Z2b2roapd7bWZndnZ2d79S7oHNacslC1aT59RvzGqUrSxtk6J7T3Kup+6rb9QtKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKw5cP7vjCjCkZ3vgAAAABJRU5ErkJggg==">
+        <!--
+          Spidey image:
+          - currently uses the base64 transparent PNG you gave earlier.
+          - if that shows a white box for you, upload a transparent PNG at assets/spidey.png
+            then change the src below to "assets/spidey.png"
+        -->
+        <div class="spidey-wrap" id="spideyWrap" aria-hidden="true">
+          <img id="spidey" class="spidey"
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAYAAAC2+1bKAAAACXBIWXMAAAsSAAALEgHS3X78AAAEtUlEQVR4nO3dMW4bSRTG8XeZgKIgNSE5FUWUFneG98GX2YeliYg+CHF7//yBzQltpCZRwhuqjs91tDXTH2vE8pNS57S30PwMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwL/IfWby0qBWcPcR7ZrgCa5W2mA3YtN3tX5+fny8vLz9tD2QQeGkEKkPyiSlaT89SvxmqULC1tk6JrT3Kqr+5ra9QsKwyTjPlAmUWkPylS1aT5tRvzGqUnSxtk6I7T3Kqr+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6I7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6I7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKw6UXeZpjO21vb2dXV1dzc3OTk5Hc+bjY2NvUOTs7e12b2roaqd7ZmdnfkXtFbdM4tSxstJrTnKqr+6rb9QtKwyTDPkAmUWkPylS1aT59RvzGqUrCxtk6J7T3Kqr+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QtKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6I7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKw6UHeZpjG21tbm5ubm9vb29fX15+fn5uF3xoYGBoaMd7eDg0G48PE5+5Ojqa+92Z2b2roapd7bWZndnZ2d79S7oHNacslC1aT59RvzGqUrSxtk6J7T3Kup+6rb9QtKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKwyTTPmAmUWkXylS1aT59RvzGqUrSxtk6J7T3Kup+6rb9QsKw5cP7vjCjCkZ3vgAAAABJRU5ErkJggg=="
+            alt="swinging spidey (transparent)">
+        </div>
       </div>
 
+      <!-- Title / leading copy -->
       <div class="title">🎂 Happy Birthday, Hero! — Abhi</div>
-      <button class="cta" onclick="location.href='page2.html'">Swing In!</button>
+
+      <div class="lead">To my favourite hero — small cape, huge heart.</div>
+
+      <div class="sub">
+        Today marks another year of your incredible story. I made this for you — a tiny Spider-Verse world with a playlist and surprises chosen just for your day.
+        Tap <strong>“Swing In!”</strong> to begin — I packed some little animations, a cake to cut, and a playlist that remembers our laughs.
+      </div>
+
+      <button class="cta pulse" id="swingBtn" onclick="location.href='page2.html'">Swing In!</button>
+
+      <div class="byline">Crafted with ✨ and a tiny spider — forever on your side, <strong>Abhi</strong></div>
     </div>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script>
-  // rotate background web
+  // 1) spin the web background slowly
   gsap.to("#bgWeb", {
-    rotation:360,
-    duration:60,
-    repeat:-1,
-    ease:"none",
-    transformOrigin:"50% 50%"
+    rotation: 360,
+    duration: 60,
+    repeat: -1,
+    ease: "none",
+    transformOrigin: "50% 50%"
   });
 
-  // swing spidey
-  gsap.timeline({ repeat:-1, yoyo:true })
-    .to("#spidey", { rotation:8, y:8, x:-6, duration:1.1, ease:"sine.inOut" })
-    .to("#spidey", { rotation:-6, y:0, x:0, duration:1.1, ease:"sine.inOut" })
-    .to("#spidey", { rotation:6, y:6, x:-3, duration:1.1, ease:"sine.inOut" });
-</script>
+  // 2) entrance animation for the card
+  gsap.from("#mainCard", {
+    y: 36,
+    autoAlpha: 0,
+    duration: 0.9,
+    ease: "power3.out",
+    delay: 0.08
+  });
 
+  // 3) subtle bounce for the album art (gently)
+  gsap.to(".art", {
+    y: -6,
+    duration: 3.6,
+    repeat: -1,
+    yoyo: true,
+    ease: "sine.inOut"
+  });
+
+  // 4) spidey bob & swing — animate wrapper so sprite stays crisp
+  const wrap = document.getElementById('spideyWrap');
+  gsap.timeline({ repeat: -1, yoyo: true })
+    .to(wrap, { rotation: 8, y: 6, duration: 1.0, ease: "sine.inOut" })
+    .to(wrap, { rotation: -6, y: -4, duration: 1.0, ease: "sine.inOut" })
+    .to(wrap, { rotation: 6, y: 4, duration: 1.0, ease: "sine.inOut" });
+
+  // 5) CTA pulse with GSAP (keeps in sync with CSS)
+  const btn = document.getElementById('swingBtn');
+  gsap.to(btn, { scale: 1.02, duration: 1.6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 0.14 });
+
+  // 6) accessibility: reduce motion respect
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (mq.matches) {
+    gsap.globalTimeline.timeScale(0.0001);
+    document.querySelectorAll('.cta').forEach(n => n.classList.remove('pulse'));
+  }
+</script>
 </body>
 </html>
