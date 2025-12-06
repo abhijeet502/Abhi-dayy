@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Memories — Abhi</title>
+<style>
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#5b0b0b,#1f0606);color:#fff}
+  .wrap{min-height:100vh;padding:20px;display:flex;align-items:flex-start;justify-content:center}
+  .card{width:100%;max-width:980px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.45));padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,0.04)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+  .cell{background:rgba(255,255,255,0.02);height:140px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .btn{margin-top:12px;padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,#ff3a3a,#ff7b7b);color:#111;border:none;font-weight:800}
+  @media(max-width:760px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:420px){ .grid{grid-template-columns:repeat(1,1fr)} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2 style="color:#ff6b6b;margin:0">Memories & Share</h2>
+      <div class="grid">
+        <div class="cell">Memory 1</div>
+        <div class="cell">Memory 2</div>
+        <div class="cell">Memory 3</div>
+        <div class="cell">Memory 4</div>
+        <div class="cell">Memory 5</div>
+        <div class="cell">Memory 6</div>
+      </div>
+      <div style="text-align:center">
+        <button class="btn" onclick="sharePage()">Share</button>
+        <button class="btn" style="margin-left:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#c9bfc6" onclick="location.href='index.html'">Replay Surprise</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function sharePage(){
+    if(navigator.share){ navigator.share({title:'Happy Birthday — Abhi', url:location.href}).catch(()=>{}); }
+    else { navigator.clipboard.writeText(location.href).then(()=>alert('Link copied!')).catch(()=>alert('Copy failed')); }
+  }
+</script>
+</body>
+</html>
