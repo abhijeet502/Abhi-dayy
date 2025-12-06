@@ -138,31 +138,27 @@
     cursor:pointer;
     flex-shrink:0;
     box-shadow: 0 8px 20px rgba(0,0,0,0.55);
+    user-select:none;
   }
   .play::before{
     content:"";
     position:absolute;
     inset:-6px;
     border-radius:50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255,90,90,0.14), transparent 30%), linear-gradient(90deg,var(--accent1),var(--accent2));
+    background: radial-gradient(circle at 30% 30%, rgba(255,90,90,0.12), transparent 30%), linear-gradient(90deg,var(--accent1),var(--accent2));
     filter:blur(6px) saturate(120%);
-    opacity:0.95;
+    opacity:0.9;
     z-index:-1;
-    transition: transform .18s ease;
+    transition: transform .18s ease, opacity .18s ease;
   }
   .play .icon{
-    width:20px;height:20px;
-    display:block;
-    border-left:10px solid #fff;
-    border-top:6px solid transparent;
-    border-bottom:6px solid transparent;
-    transform:translateX(2px);
+    font-size:18px;
+    color:#fff;
+    line-height:1;
+    transform:translateX(1px);
   }
   .play.playing .icon{
-    border-left-color:#111;
-    background:linear-gradient(90deg,var(--accent1),var(--accent2));
-    border-left:0;
-    width:24px;height:24px;
+    color:#111;
   }
   .play.playing{ background: linear-gradient(90deg,var(--accent1),var(--accent2)); }
   .play.paused{ background: linear-gradient(180deg,#222, #111); }
@@ -180,9 +176,26 @@
   .controls{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px; }
   .controls-left{ color:var(--muted); font-size:14px; }
   .controls-right{ display:flex; gap:10px; align-items:center; }
-  .btn{ padding:10px 14px; border-radius:999px; border:none; font-weight:900; cursor:pointer; }
+
+  /* big play button improved appearance */
+  .btn{
+    padding:10px 14px; border-radius:999px; border:none; font-weight:900; cursor:pointer;
+  }
   .btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted) }
-  .btn.playbig{ background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#111; width:84px; height:84px; border-radius:999px; display:grid; place-items:center; box-shadow:0 20px 50px rgba(0,0,0,0.6); font-size:16px; }
+
+  .btn.playbig{
+    width:84px; height:84px; border-radius:999px;
+    display:grid; place-items:center; font-size:18px;
+    color:#111; background: linear-gradient(180deg,#fff,#ffd1d1);
+    box-shadow: 0 22px 60px rgba(255,56,56,0.12), 0 6px 18px rgba(0,0,0,0.6);
+    border: none;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn.playbig:hover{ transform: translateY(-3px); box-shadow: 0 28px 80px rgba(255,56,56,0.14); }
+  .btn.playbig:active{ transform: translateY(0); }
+
+  /* show a small ring behind the big button when playing */
+  .btn.playbig.playing{ box-shadow: 0 28px 80px rgba(255,56,56,0.26), 0 6px 18px rgba(0,0,0,0.6); }
 
   @media(max-width:480px){
     .art-wrap{ width:200px; height:200px; }
@@ -213,8 +226,8 @@
 
       <div class="playlist" id="playlist">
         <!-- row 1 -->
-        <div class="track" data-src="audio/night-changes.mp3">
-          <div class="play idle" role="button" aria-label="Play Night Changes"><span class="icon"></span></div>
+        <div class="track" data-src="assets/audio/night-changes.mp3">
+          <div class="play idle" role="button" aria-label="Play Night Changes"><span class="icon">▶</span></div>
           <div class="meta">
             <div class="track-title">Night Changes</div>
             <div class="track-artist">One Direction</div>
@@ -224,8 +237,8 @@
         </div>
 
         <!-- row 2 -->
-        <div class="track" data-src="audio/memories.mp3">
-          <div class="play idle" role="button" aria-label="Play Memories"><span class="icon"></span></div>
+        <div class="track" data-src="assets/audio/memories.mp3">
+          <div class="play idle" role="button" aria-label="Play Memories"><span class="icon">▶</span></div>
           <div class="meta">
             <div class="track-title">Memories</div>
             <div class="track-artist">Maroon 5</div>
@@ -235,8 +248,8 @@
         </div>
 
         <!-- row 3 -->
-        <div class="track" data-src="audio/never-grow-up.mp3">
-          <div class="play idle" role="button" aria-label="Play Never Grow Up"><span class="icon"></span></div>
+        <div class="track" data-src="assets/audio/never-grow-up.mp3">
+          <div class="play idle" role="button" aria-label="Play Never Grow Up"><span class="icon">▶</span></div>
           <div class="meta">
             <div class="track-title">Never Grow Up</div>
             <div class="track-artist">Taylor Swift</div>
@@ -250,7 +263,7 @@
         <div class="controls-left">Now playing: <span id="nowPlaying">—</span></div>
         <div class="controls-right">
           <button id="prev" class="btn ghost" aria-label="previous">⟵</button>
-          <button id="playPause" class="btn playbig" aria-label="play/pause">Play</button>
+          <button id="playPause" class="btn playbig" aria-label="play/pause">▶</button>
           <button id="next" class="btn ghost" aria-label="next">⟶</button>
         </div>
       </div>
@@ -277,9 +290,13 @@
       const p = t.querySelector('.play');
       p.classList.remove('playing','paused');
       p.classList.add('idle');
+      const icon = p.querySelector('.icon');
+      if(icon) icon.textContent = '▶';
       t.querySelector('.progress>i').style.width = '0%';
     });
     nowPlaying.textContent = '—';
+    playPauseBtn.classList.remove('playing');
+    playPauseBtn.textContent = '▶';
   }
 
   function setActive(i){
@@ -289,16 +306,29 @@
     t.classList.add('active');
     const p = t.querySelector('.play');
     p.classList.remove('idle'); p.classList.add('playing');
+    const icon = p.querySelector('.icon');
+    if(icon) icon.textContent = '⏸';
     nowPlaying.textContent = t.querySelector('.track-title').textContent + ' — ' + t.querySelector('.track-artist').textContent;
+    playPauseBtn.classList.add('playing');
+    playPauseBtn.textContent = '⏸';
   }
 
   function playIndex(i){
     if(i < 0 || i >= trackEls.length) return;
     const src = trackEls[i].dataset.src;
     if(!src) return;
-    if(currentIndex === i && !player.paused){ player.pause(); return; }
-    if(currentIndex !== i){ player.src = src; currentIndex = i; }
-    player.play().catch(()=>{/* autoplay blocked until user gesture */});
+    // toggle pause if same index
+    if(currentIndex === i && !player.paused){
+      player.pause(); return;
+    }
+    if(currentIndex !== i){
+      player.src = src;
+      currentIndex = i;
+    }
+    player.play().catch(()=>{
+      // may be blocked until user gesture; clicking track/play button is a gesture though
+      console.warn('play prevented or loading failed');
+    });
     setActive(currentIndex);
     startProgressLoop();
   }
@@ -362,16 +392,17 @@
   });
 
   player.addEventListener('play', ()=> {
-    playPauseBtn.textContent = 'Pause';
+    playPauseBtn.textContent = '⏸';
     if(currentIndex >= 0) setActive(currentIndex);
     startProgressLoop();
   });
   player.addEventListener('pause', ()=> {
-    playPauseBtn.textContent = 'Play';
+    playPauseBtn.textContent = '▶';
     if(currentIndex >= 0){
       const p = trackEls[currentIndex].querySelector('.play');
       p.classList.remove('playing');
       p.classList.add('paused');
+      const icon = p.querySelector('.icon'); if(icon) icon.textContent = '▶';
     }
     cancelAnimationFrame(raf);
   });
@@ -381,13 +412,14 @@
     playIndex(n);
   });
 
-  // preload metadata (optional)
+  // preload metadata (optional) - using corrected assets paths
   trackEls.forEach((t, idx)=>{
     const src = t.dataset.src;
     if(!src) return;
     const a = document.createElement('audio');
     a.preload = 'metadata';
     a.src = src;
+    // silently add to memory so duration will be known later
   });
 
   // keyboard space toggles
