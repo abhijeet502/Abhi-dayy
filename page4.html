@@ -4,318 +4,228 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Letter — Abhi</title>
-
-<!-- Styles: envelope teaser + animated letter + typing -->
 <style>
   :root{
-    --bg1:#5b0b0b;
-    --bg2:#1f0606;
-    --accent1:#ff3a3a;
-    --accent2:#ff7b7b;
-    --muted:#c9bfc6;
+    --bg-top:#5b0b0b; --bg-bot:#1f0606;
+    --accent1:#ff3a3a; --accent2:#ff7b7b;
+    --card-bg: rgba(0,0,0,0.6);
   }
 
-  html,body{
-    height:100%;
-    margin:0;
-    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    background: linear-gradient(180deg,var(--bg1),var(--bg2));
-    color:#fff;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg-top),var(--bg-bot));color:#fff;-webkit-font-smoothing:antialiased}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .stage{width:100%;max-width:720px;position:relative;padding:24px}
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), var(--card-bg));
+    border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
   }
 
-  /* faint web background like other pages */
-  body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background: url('assets/web.png') center/cover no-repeat;
-    opacity:.07;
-    filter: blur(2px) saturate(.9);
-    z-index:0;
-    pointer-events:none;
+  h1{color:#ff6b6b;margin:0 0 10px 0;text-align:center;font-size:26px}
+  .subtitle{text-align:center;color:#d9c9cf;margin-bottom:18px}
+
+  /* envelope area */
+  .envelope-stage{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+  .env-btn{background:transparent;border:none;padding:0;margin:0;cursor:pointer;outline:none}
+  .env-3d{
+    width:260px;height:220px;perspective:1000px;
+    display:flex;align-items:center;justify-content:center;
   }
 
-  .wrap{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:28px;
-    z-index:2;
+  /* envelope image - front that flips */
+  .env-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.9,.2,1)}
+  .env-inner.open{transform: rotateX(-170deg) translateY(-12px) scale(1.02)} /* open animation */
+
+  .env-front, .env-back{
+    position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  }
+
+  .env-front img{width:100%;height:100%;object-fit:cover;display:block}
+  .env-back{transform:rotateX(180deg);background:linear-gradient(180deg,#2b0c0c,#1a0606);border:1px solid rgba(255,255,255,0.02)}
+
+  /* the letter panel that appears under the opened envelope */
+  .letter-wrap{
+    width:100%;max-width:520px;margin:0 auto;margin-top:10px;
+    border-radius:12px;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.65));
+    border:1px solid rgba(255,255,255,0.03);
+    min-height:300px;display:flex;align-items:center;justify-content:center;
+    opacity:0;transform:translateY(12px);transition:opacity .45s ease, transform .45s ease;
+  }
+  .letter-wrap.visible{opacity:1;transform:translateY(0)}
+
+  /* letter inner area — vertically centered */
+  .letter-inner{
+    width:100%;max-width:460px;height:320px;display:flex;align-items:center;justify-content:center;
     position:relative;
   }
 
-  .stage{
-    width:100%;
-    max-width:720px;
+  .letter-box{
+    width:100%;height:90%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.75));
+    border-radius:12px;padding:22px;overflow:auto;color:#f1dfe2;
+    display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+    box-shadow: inset 0 6px 18px rgba(0,0,0,0.35);
+    font-size:15px;line-height:1.7;
   }
 
-  /* Card container (hidden until envelope opens) */
-  .card{
-    margin:0 auto;
-    border-radius:18px;
-    padding:22px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.6));
-    border:1px solid rgba(255,255,255,0.04);
-    box-shadow: 0 30px 90px rgba(0,0,0,0.65);
-    overflow:hidden;
-  }
+  /* typed text container */
+  .typed{white-space:pre-wrap;word-wrap:break-word; width:100%}
 
-  h2{
-    margin:0 0 8px 0;
-    color: var(--accent2);
-    font-weight:900;
-    font-size:22px;
-    text-align:center;
-  }
+  /* small controls */
+  .controls{display:flex;gap:12px;justify-content:center;margin-top:14px}
+  .btn{padding:10px 16px;border-radius:999px;border:none;font-weight:800;cursor:pointer}
+  .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#111}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#d9c9cf}
 
-  .subtitle{
-    text-align:center;
-    color:var(--muted);
-    margin-bottom:12px;
-  }
-
-  /* Envelope teaser (center) */
-  .env-wrap{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:18px 0 14px;
-  }
-  .env{
-    width:260px;
-    height:260px;
-    border-radius:14px;
-    background: linear-gradient(180deg,#ffffff 0%, #fff 100%);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow: 0 22px 60px rgba(0,0,0,0.6);
-    cursor:pointer;
-    overflow:hidden;
-    transform-origin:center;
-  }
-  .env img{ width:82%; height:82%; object-fit:cover; border-radius:12px; display:block }
-
-  .hint{
-    text-align:center;
-    color:#d7c5cb;
-    margin-top:10px;
-  }
-
-  /* Hidden letter area that will animate in */
-  .letter{
-    margin-top:18px;
-    border-radius:12px;
-    padding:18px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(6,6,8,0.95));
-    border:1px solid rgba(255,255,255,0.03);
-    color:#f1dfe2;
-    line-height:1.6;
-    font-size:15px;
-    display:none;
-  }
-
-  .letter h3{
-    margin:0 0 8px 0;
-    color:#ffb2b2;
-    font-size:20px;
-    text-align:left;
-  }
-
-  .letter .para{
-    min-height:36px;
-    overflow:visible;
-    white-space:pre-wrap;
-    margin-bottom:12px;
-    opacity:0;
-  }
-
-  .letter .sig{ text-align:right; font-weight:800; margin-top:6px; color:#ffdfe6; opacity:0; }
-
-  .actions{
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    margin-top:16px;
-  }
-
-  .btn{
-    padding:12px 18px;
-    border-radius:999px;
-    border:none;
-    font-weight:800;
-    cursor:pointer;
-  }
-  .btn.primary{ background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#111; box-shadow:0 12px 36px rgba(255,60,60,0.12) }
-  .btn.ghost{ background:transparent; color:#f0dfe0; border:1px solid rgba(255,255,255,0.05) }
-
-  /* small little envelope flap graphic (decor) */
-  .flap{
-    position:absolute;
-    right:28px;
-    top:18px;
-    width:46px;height:46px;
-    opacity:0.9;
-    filter:drop-shadow(0 6px 12px rgba(0,0,0,0.4));
-  }
-
-  @media (max-width:520px){
-    .env{ width:200px; height:200px; }
-    .stage{ padding:0 12px; }
+  /* responsive */
+  @media(max-width:460px){
+    .env-3d{width:210px;height:176px}
+    .letter-wrap{min-height:260px}
+    .letter-inner{height:260px}
+    .letter-box{padding:16px}
   }
 </style>
 </head>
 <body>
-
   <div class="wrap">
     <div class="stage">
+      <div class="card" role="region" aria-label="Envelope stage">
+        <h1>A Spider-Verse Birthday Letter 🕷️</h1>
+        <div class="subtitle">From my heart to my favourite hero — click the envelope to open your birthday transmission.</div>
 
-      <!-- card container -->
-      <div class="card" role="main" aria-label="Birthday letter stage">
+        <div class="envelope-stage">
+          <!-- ENVELOPE 3D BUTTON -->
+          <button id="envBtn" class="env-btn" aria-label="Open envelope (click or press enter)">
+            <div class="env-3d" aria-hidden="true">
+              <div id="envInner" class="env-inner" role="img" aria-hidden="true">
+                <!-- FRONT of envelope (the red envelope image you want) -->
+                <div class="env-front">
+                  <!-- Replace the src with your friend's red envelope image filename -->
+                  <img id="envImg" src="assets/envelope-red.png" alt="red envelope">
+                </div>
+                <!-- a subtle back face while flipping -->
+                <div class="env-back"></div>
+              </div>
+            </div>
+          </button>
 
-        <h2>A Spider-Verse Birthday Letter <span aria-hidden="true">🕷️</span></h2>
-        <div class="subtitle">From my heart to my favourite hero</div>
-
-        <!-- envelope teaser -->
-        <div class="env-wrap">
-          <div id="env" class="env" role="button" aria-pressed="false" aria-label="Open envelope">
-            <!-- use your album-art as envelope preview — keeps your existing asset -->
-            <img id="envImg" src="assets/album-art.png" alt="envelope preview / card art">
+          <!-- LETTER that appears after open -->
+          <div id="letter" class="letter-wrap" role="document" aria-live="polite" aria-hidden="true">
+            <div class="letter-inner">
+              <div id="letterBox" class="letter-box" tabindex="0">
+                <div id="typed" class="typed" aria-hidden="false"></div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="hint">Click the envelope to open your birthday transmission.</div>
-
-        <!-- the real letter (initially hidden) -->
-        <div id="letter" class="letter" aria-hidden="true">
-          <h3 id="letterTitle">To my Birthday Hero</h3>
-
-          <div id="p1" class="para"></div>
-          <div id="p2" class="para"></div>
-          <div id="p3" class="para"></div>
-
-          <div id="sig" class="sig"></div>
-
-          <div class="actions" aria-hidden="false">
-            <button id="toPlaylist" class="btn primary">Continue to Playlist</button>
-            <button id="backHome" class="btn ghost">Back</button>
+          <div class="controls" aria-hidden="true">
+            <button id="skipBtn" class="btn ghost">Skip Typing</button>
+            <button id="continueBtn" class="btn primary" onclick="location.href='page5.html'">Continue to Playlist</button>
           </div>
         </div>
 
       </div>
-
     </div>
   </div>
 
-<!-- GSAP (for envelope open + subtle motion) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
 <script>
-(function(){
-  // content to type (you said inspired by the other letter — I used warm copy; change text if you want)
-  const content = {
-    p1: "Today marks another year of your incredible existence, and I couldn't be more grateful to be part of your story. You don't need a mask or a suit to be a hero — the way you care, laugh, and show up for people already makes your world brighter.",
-    p2: "You bring your own kind of superpower into every room you enter: your warmth, your chaos, your quiet strength. You deserve every happy universe, every peaceful night, and every dream you're secretly chasing.",
-    p3: "On this day, I just want you to know: no matter how many timelines or realities there are, I would still choose this one — the one where I get to celebrate you."
-  };
-  const signature = "Forever on your side,\nAbhi 💖🕷️";
+  // The letter text — replace or edit if you want different copy.
+  const LETTER_TEXT = `To my Birthday Hero
 
-  const env = document.getElementById('env');
-  const envImg = document.getElementById('envImg');
+Today marks another year of your incredible existence, and I couldn't be more grateful to be part of your story. You don't need a mask or a suit to be a hero — the way you care, laugh, and show up for people already makes your world brighter.
+
+You bring your own kind of superpower into every room you enter: your warmth, your chaos, your quiet strength. You deserve every happy universe, every peaceful night, and every dream you're secretly chasing.
+
+On this day, I just want you to know: no matter how many timelines or realities there are, I would still choose this one — the one where I get to celebrate you.
+
+Forever on your side,
+Abhi 💖🕷️`;
+
+  const envBtn = document.getElementById('envBtn');
+  const envInner = document.getElementById('envInner');
   const letter = document.getElementById('letter');
-  const p1 = document.getElementById('p1');
-  const p2 = document.getElementById('p2');
-  const p3 = document.getElementById('p3');
-  const sig = document.getElementById('sig');
-  const toPlaylist = document.getElementById('toPlaylist');
-  const backHome = document.getElementById('backHome');
+  const typedEl = document.getElementById('typed');
+  const skipBtn = document.getElementById('skipBtn');
+  const letterBox = document.getElementById('letterBox');
 
-  // typing helper
-  function typeText(el, text, charDelay=25){
-    return new Promise(resolve=>{
-      el.textContent = "";
-      el.style.opacity = 1;
-      let i=0;
-      function step(){
-        if(i < text.length){
-          el.textContent += text.charAt(i);
-          i++;
-          // slightly slower for punctuation to look natural
-          const nextDelay = (/[.,!?\n]/.test(text.charAt(i))) ? charDelay * 6 : charDelay;
-          setTimeout(step, nextDelay);
-        } else {
+  let typingAnim = null;
+  let typingIndex = 0;
+  let typingRunning = false;
+
+  // typewriter function (smooth, with adjustable speed)
+  function startTyping(text, target, speed = 20) {
+    typingRunning = true;
+    typingIndex = 0;
+    target.textContent = '';
+    return new Promise((resolve) => {
+      function step() {
+        if (typingIndex >= text.length) {
+          typingRunning = false;
           resolve();
+          return;
         }
+        // type character
+        const ch = text.charAt(typingIndex++);
+        target.textContent += ch;
+        // keep letter box visually centered: ensure letter box scroll is in middle while typing
+        // We'll attempt to keep scrollTop near center so new text fills but stays visually centered.
+        // If overflow occurs, allow it to scroll a bit.
+        const container = letterBox;
+        // compute reasonable middle target
+        const middle = Math.max(0, (container.scrollHeight - container.clientHeight)/2);
+        // gently approach middle
+        container.scrollTop = Math.round(container.scrollTop + (middle - container.scrollTop) * 0.25);
+
+        typingAnim = setTimeout(step, speed + Math.random()*20);
       }
       step();
     });
   }
 
-  // envelope open animation sequence
-  env.addEventListener('click', async function openEnvelope(){
-    // disable further clicks
-    env.setAttribute('aria-pressed','true');
-    env.style.pointerEvents = 'none';
-
-    // small press animation
-    await gsap.to(env, { scale: 0.94, duration: 0.12, ease: "power1.out" });
-
-    // "flip / open" envelope visual:
-    // 1) scale up slightly and rotate Z to add drama
-    // 2) fade out env image and reveal letter panel
-    const tl = gsap.timeline();
-    tl.to(env, { rotationY: 40, duration: 0.28, ease: "power2.out" }, 0);
-    tl.to(env, { rotationX: -8, y: -18, duration: 0.45, ease:"power2.out" }, 0);
-    tl.to(env, { autoAlpha: 0, duration: 0.25 }, 0.36);
-
-    // after env fades, show letter container
-    await tl.then();
-
-    // reveal letter container with pop
-    letter.style.display = 'block';
+  // Open envelope — flip + reveal letter, then type
+  async function openEnvelope() {
+    if (envInner.classList.contains('open')) return;
+    envInner.classList.add('open');
+    // small wait so flip begins
+    await new Promise(r => setTimeout(r, 520));
+    // reveal letter
+    letter.classList.add('visible');
     letter.setAttribute('aria-hidden','false');
-    gsap.fromTo(letter, { y: 18, autoAlpha: 0, scale: 0.98 }, { y:0, autoAlpha:1, scale:1, duration:0.6, ease:"elastic.out(1,0.6)" });
-
-    // small background pulse while typing begins
-    gsap.to(document.body, { backgroundPosition: '0 0', duration: 0.1 });
-
-    // type paragraphs in sequence
-    await typeText(p1, content.p1, 18);
-    await new Promise(r=> setTimeout(r, 260));
-    await typeText(p2, content.p2, 18);
-    await new Promise(r=> setTimeout(r, 260));
-    await typeText(p3, content.p3, 18);
-    await new Promise(r=> setTimeout(r, 380));
-    await typeText(sig, signature, 24);
-
-    // small glow on the continue button to draw attention
-    gsap.fromTo(toPlaylist, { boxShadow: '0 0 0 rgba(0,0,0,0)' }, { boxShadow: '0 16px 48px rgba(255,80,80,0.18)', duration: 0.6, yoyo:true, repeat:1 });
-  }, { once:true });
-
-  // actions
-  toPlaylist.addEventListener('click', ()=> location.href = 'page5.html');
-  backHome.addEventListener('click', ()=> history.back());
-
-  // keyboard accessibility: Enter opens envelope
-  env.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') env.click(); });
-
-  // Respect reduced motion preference
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // disable animations: show letter immediately (no typing)
-    env.addEventListener('click', () => {
-      env.style.display = 'none';
-      letter.style.display = 'block';
-      p1.textContent = content.p1;
-      p2.textContent = content.p2;
-      p3.textContent = content.p3;
-      sig.textContent = signature;
-      letter.setAttribute('aria-hidden','false');
-    }, { once:true });
+    // start typing
+    await startTyping(LETTER_TEXT, typedEl, 18);
+    // typing finished
   }
-})();
+
+  // click or enter to open
+  envBtn.addEventListener('click', () => openEnvelope());
+  envBtn.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEnvelope(); } });
+
+  // skip typing to finish immediately
+  skipBtn.addEventListener('click', () => {
+    if (typingAnim) clearTimeout(typingAnim);
+    if (typingRunning) {
+      typedEl.textContent = LETTER_TEXT;
+      typingRunning = false;
+      // scroll to center final text
+      setTimeout(()=> { letterBox.scrollTop = Math.max(0, (letterBox.scrollHeight - letterBox.clientHeight)/2); }, 20);
+    } else {
+      // toggle: if not typing, reopen animation (no-op)
+    }
+  });
+
+  // optional: allow clicking envelope image again to close (toggle). If you don't want that, remove this.
+  envInner.addEventListener('transitionend', (e) => {
+    // after open completes, focus letter so keyboard users can read/scroll
+    if (envInner.classList.contains('open')) {
+      setTimeout(()=> letterBox.focus(), 300);
+    }
+  });
+
+  // Accessibility: if user navigates directly to letter page, reveal typed content immediately
+  // (this helps dev preview)
+  if (location.search.includes('autoopen')) {
+    openEnvelope();
+  }
 </script>
 </body>
 </html>
