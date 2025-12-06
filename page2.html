@@ -218,8 +218,8 @@
         <div class="env-wrap" style="margin-top:12px;">
           <!-- envelope / teaser image -->
           <div id="env" class="env" role="button" tabindex="0" aria-pressed="false" aria-label="Open letter (click or press enter)">
-            <!-- we show album-art.png here. Replace if you have a custom envelope image -->
-            <img id="envImg" src="assets/album-art.png" alt="Envelope teaser (tap to open)">
+            <!-- use the red envelope asset -->
+            <img id="envImg" src="assets/envelope-red.png" alt="Envelope teaser (tap to open)">
           </div>
 
           <!-- small top-right badge -->
@@ -251,64 +251,49 @@
   // small chime (file optional), catches errors if missing
   const chime = new Audio('audio/open-chime.mp3');
 
-  // helper: run chime safely
   function playChime(){
     chime.currentTime = 0;
-    chime.play().catch(()=>{/* autoplay/cross-origin may block - it's fine */});
+    chime.play().catch(()=>{/* ignore if blocked */});
   }
 
   // core opening animation using GSAP
   function revealLetter(fromButton){
-    // mark as opened for screen readers
+    if (env.classList.contains('open')) return;
     env.setAttribute('aria-pressed','true');
-
-    // play chime
     playChime();
-
-    // animate env "pop" and tilt
     env.classList.add('open');
 
-    // envelope wiggle + small flip
     gsap.timeline()
       .to(env, { rotation: -6, duration: 0.18, ease: "sine.out" })
       .to(env, { rotation: 6, duration: 0.22, ease: "sine.inOut", y: -10 })
       .to(env, { rotation: 0, duration: 0.3, y: -6, ease: "power2.out" });
 
-    // reveal the teaser copy with fade/slide
     teaser.classList.add('teaser-visible');
 
-    // nice subtle zoom to the inner artwork (simulate envelope flap open)
     gsap.fromTo(envImg, { scale: 0.96, filter: "blur(0px)" }, { scale:1, duration: 0.7, ease: "power3.out" });
 
-    // focus follow-up for keyboard users
-    setTimeout(()=> {
-      // if triggered by "Make a Wish" button, navigate after a short delay
-      if (fromButton === 'wish') location.href = 'page3.html';
-    }, 800);
+    // if the user clicked Make a Wish, navigate after a short friendly delay
+    if (fromButton === 'wish') {
+      setTimeout(()=> location.href = 'page3.html', 700);
+    }
   }
 
-  // click or key to open env
   env.addEventListener('click', () => revealLetter());
   env.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); revealLetter(); } });
 
-  // open via the Open Letter button
   openBtn.addEventListener('click', () => {
     revealLetter('open');
-    // after a bit, go to letter page:
-    setTimeout(()=> location.href = 'page4.html', 900);
+    setTimeout(()=> location.href = 'page4.html', 850);
   });
 
-  // Make a Wish button opens page3 (we show chime and small animation before nav)
   wishBtn.addEventListener('click', () => revealLetter('wish'));
 
-  // tiny entrance animation
+  // entrance
   gsap.from('.card', { y: 28, autoAlpha: 0, duration: 0.9, ease: "power3.out" });
 
-  // Respect reduced motion
+  // respect reduced motion
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (mq.matches) {
-    gsap.globalTimeline.timeScale(0.0001);
-  }
+  if (mq.matches) gsap.globalTimeline.timeScale(0.0001);
 </script>
 </body>
 </html>
