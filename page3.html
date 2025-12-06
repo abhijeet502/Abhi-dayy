@@ -1,58 +1,445 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Cut the Cake — Abhi</title>
+
+<!-- Styles: richer panel, card glow and overlay -->
 <style>
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#5b0b0b,#1f0606);color:#fff}
-  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-  .card{width:100%;max-width:520px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.45));padding:18px;border-radius:16px;border:1px solid rgba(255,255,255,0.04)}
-  canvas{width:100%;height:260px;border-radius:10px;display:block;touch-action:none}
-  .hint{color:#c9bfc6;margin-top:10px}
-  .btn{margin-top:12px;padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,#ff3a3a,#ff7b7b);color:#111;border:none;font-weight:800}
+  :root{
+    --bg1:#5b0b0b;
+    --bg2:#1f0606;
+    --accent1:#ff3a3a;
+    --accent2:#ff7b7b;
+    --muted:#c9bfc6;
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:#fff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* faint web background (same as other pages) */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background: url('assets/web.png') center/cover no-repeat;
+    opacity:.08;
+    filter: blur(2px) saturate(.9);
+    z-index:0;
+    pointer-events:none;
+  }
+
+  .wrap{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+    position:relative;
+    z-index:2;
+  }
+
+  .card{
+    width:100%;
+    max-width:620px;
+    border-radius:18px;
+    padding:20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.55));
+    border:1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 30px 90px rgba(0,0,0,0.65);
+    position:relative;
+    overflow:visible;
+  }
+
+  h2{
+    margin:0 0 8px 0;
+    color: var(--accent2);
+    font-weight:800;
+    font-size:22px;
+  }
+
+  .card .intro{
+    color: rgba(255,240,240,0.9);
+    margin-bottom:12px;
+    font-size:15px;
+    line-height:1.5;
+  }
+
+  /* canvas container with dark panel */
+  .canvas-wrap{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.6));
+    border-radius:12px;
+    padding:12px;
+    border:1px solid rgba(255,255,255,0.02);
+    display:block;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  }
+
+  canvas{
+    width:100%;
+    height:320px;
+    display:block;
+    touch-action:none;
+    border-radius:10px;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.02), rgba(0,0,0,0.4));
+    cursor: crosshair;
+  }
+
+  .hint{
+    color:#d6c6cc;
+    margin-top:12px;
+    font-size:14px;
+    text-align:center;
+  }
+
+  .controls{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin-top:14px;
+  }
+
+  .btn{
+    padding:12px 18px;
+    border-radius:999px;
+    border:none;
+    font-weight:800;
+    cursor:pointer;
+    transition: transform .12s ease;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn.primary{ background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#111; box-shadow:0 12px 36px rgba(255,60,60,0.12) }
+  .btn.ghost{ background: transparent; color:#f0dfe0; border: 1px solid rgba(255,255,255,0.05) }
+
+  /* overlay when slice successful */
+  .overlay{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: rgba(0,0,0,0.5);
+    z-index:9999;
+    visibility:hidden;
+    opacity:0;
+    transition:opacity .35s ease, visibility .35s;
+    padding:20px;
+  }
+  .overlay.show{ visibility:visible; opacity:1; }
+
+  .modal{
+    background: linear-gradient(180deg, rgba(12,12,13,0.98), rgba(0,0,0,0.96));
+    padding:22px;
+    border-radius:16px;
+    max-width:480px;
+    width:100%;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+  }
+  .modal h3{ margin:0 0 10px 0; color: #ffdedf; font-size:20px; font-weight:900; letter-spacing:0.4px;}
+  .modal p{ color: #e6d3d6; line-height:1.5; margin:0 0 14px 0; font-size:15px; }
+  .modal .cta{ padding:12px 18px; border-radius:999px; background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#111; font-weight:900; border:none; cursor:pointer; }
+
+  /* tiny confetti pieces (positioned absolutely) */
+  .confetti{
+    position:fixed;
+    z-index:9998;
+    pointer-events:none;
+    font-size:18px;
+    will-change:transform,opacity;
+  }
+
+  @media (max-width:460px){
+    canvas{ height:260px; }
+    .card{ padding:16px; }
+  }
 </style>
 </head>
 <body>
+
   <div class="wrap">
-    <div class="card">
-      <h2 style="color:#ff6b6b;margin:0 0 8px 0">Cut your birthday cake, hero! ✂️</h2>
-      <canvas id="cakeCanvas" class="cake" aria-label="Cake canvas"></canvas>
+    <div class="card" role="main" aria-label="Cake cut stage">
+      <h2>Cut your birthday cake, hero! ✂️</h2>
+      <div class="intro">Drag a straight line across the middle of the cake to slice it. Tip: drag straight once — the better the slice, the bigger the surprise.</div>
+
+      <div class="canvas-wrap" aria-hidden="false">
+        <canvas id="cakeCanvas" width="1200" height="600" aria-label="Cake canvas"></canvas>
+      </div>
+
       <div class="hint">Drag a straight line across the middle of the cake to slice it. Tip: drag straight once.</div>
-      <div style="text-align:center"><button class="btn" onclick="location.href='page4.html'">Show Letter</button></div>
+
+      <div class="controls" role="group" aria-label="controls">
+        <button class="btn primary" id="playBtn">Play Surprise</button>
+        <button class="btn ghost" id="retryBtn">Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- success overlay -->
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <h3>Perfect Cut! 🎉🍰</h3>
+      <p>Make a wish, hero — your slice unlocked a little surprise. Tap continue to open the letter and see what I prepared for you.</p>
+      <button id="continueBtn" class="cta">Show Letter</button>
     </div>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script>
-(function(){
+(() => {
+  // elements
   const canvas = document.getElementById('cakeCanvas');
-  const ctx = canvas.getContext('2d');
-  let w = 1200, h = 600;
-  function resize(){ const rect = canvas.getBoundingClientRect(); canvas.width = Math.max(600, Math.floor(rect.width*2)); canvas.height = Math.max(300, Math.floor(260*2)); w = canvas.width; h = canvas.height; drawCake(); }
-  window.addEventListener('resize', resize);
-  function drawCake(){
-    ctx.clearRect(0,0,w,h);
-    ctx.fillStyle = '#071016';
-    ctx.fillRect(0,0,w,h);
-    const img = new Image(); img.src = 'assets/cake-img.png';
-    img.onload = ()=>{
-      const scale = Math.min((w*0.75)/img.width, (h*0.7)/img.height);
-      const iw = img.width*scale, ih = img.height*scale;
-      ctx.drawImage(img, (w-iw)/2, (h-ih)/2, iw, ih);
-    };
-  }
-  resize();
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const playBtn = document.getElementById('playBtn');
+  const retryBtn = document.getElementById('retryBtn');
+  const overlay = document.getElementById('overlay');
+  const continueBtn = document.getElementById('continueBtn');
 
-  // simple straight-line slice detection
-  let dragging=false, start=null;
-  canvas.addEventListener('pointerdown', (e)=>{ dragging=true; const r=canvas.getBoundingClientRect(); start = {x:(e.clientX-r.left)*(canvas.width/r.width), y:(e.clientY-r.top)*(canvas.height/r.height)}; });
-  canvas.addEventListener('pointermove', (e)=>{ if(!dragging) return; const r=canvas.getBoundingClientRect(); const p = {x:(e.clientX-r.left)*(canvas.width/r.width), y:(e.clientY-r.top)*(canvas.height/r.height)}; drawCake(); ctx.strokeStyle='rgba(255,255,255,0.9)'; ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(start.x,start.y); ctx.lineTo(p.x,p.y); ctx.stroke(); });
-  canvas.addEventListener('pointerup', (e)=>{ if(!dragging) return; dragging=false; const r=canvas.getBoundingClientRect(); const p = {x:(e.clientX-r.left)*(canvas.width/r.width), y:(e.clientY-r.top)*(canvas.height/r.height)}; const dx = p.x - start.x, dy = p.y - start.y; const angle = Math.abs(Math.atan2(dy,dx)); const centerY = canvas.height/2; const crossesMiddle = ((start.y < centerY && p.y > centerY) || (p.y < centerY && start.y > centerY) || Math.abs((start.y+p.y)/2 - centerY) < canvas.height*0.08); if(angle < Math.PI*0.35 && Math.abs(dx) > canvas.width*0.18 && crossesMiddle){ // success
-      // confetti
-      for(let i=0;i<12;i++){ const d=document.createElement('div'); d.textContent='✨'; d.style.position='fixed'; d.style.left=(window.innerWidth/2 + (Math.random()-0.5)*260)+'px'; d.style.top=(window.innerHeight/2 + (Math.random()-0.5)*160)+'px'; d.style.zIndex=9999; document.body.appendChild(d); gsap.to(d,{y:-240,opacity:0,duration:1.2,rotation:Math.random()*360,onComplete:()=>d.remove()}); }
-      // play memories
-      const a = new Audio('audio/memories.mp3'); a.play().catch(()=>{});
-    } else { drawCake(); }});
+  // assets (keeps same assets folder — won't conflict)
+  const cakeSrc = 'assets/cake-img.png';       // your cake image (keep)
+  const memAudioSrc = 'audio/memories.mp3';    // background audio when success (keep)
+
+  // Hi-dpi / sizing
+  function resizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    const pxRatio = Math.min(window.devicePixelRatio || 1, 2); // cap DPR for performance
+    canvas.width = Math.max(600, Math.floor(rect.width * pxRatio));
+    canvas.height = Math.max(300, Math.floor((rect.height || 320) * pxRatio));
+    drawCake();
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  // load cake image
+  const cakeImg = new Image();
+  cakeImg.src = cakeSrc;
+  cakeImg.crossOrigin = 'anonymous';
+  cakeImg.onload = () => {
+    // initial draw
+    resizeCanvas();
+  };
+
+  // draw cake centered
+  function drawCake(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // subtle dark bg
+    ctx.fillStyle = '#05090b';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    if (!cakeImg.complete) return;
+
+    // compute scaled size
+    const scale = Math.min((canvas.width * 0.76) / cakeImg.width, (canvas.height * 0.86) / cakeImg.height);
+    const iw = cakeImg.width * scale;
+    const ih = cakeImg.height * scale;
+    const x = (canvas.width - iw) / 2;
+    const y = (canvas.height - ih) / 2;
+
+    // soft shadow behind image
+    ctx.save();
+    ctx.filter = 'blur(6px) brightness(0.85)';
+    ctx.globalAlpha = 0.28;
+    ctx.drawImage(cakeImg, x-6, y+12, iw, ih);
+    ctx.restore();
+
+    // main cake
+    ctx.drawImage(cakeImg, x, y, iw, ih);
+
+    // subtle overlay vignette
+    const grad = ctx.createLinearGradient(0,0,0,canvas.height);
+    grad.addColorStop(0, 'rgba(0,0,0,0.00)');
+    grad.addColorStop(0.7, 'rgba(0,0,0,0.16)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // store cake area for hit detection
+    cakeArea.x = x; cakeArea.y = y; cakeArea.w = iw; cakeArea.h = ih;
+  }
+
+  // cake bounding area (updated on draw)
+  const cakeArea = { x:0,y:0,w:0,h:0 };
+
+  // pointer handling for straight-line slice
+  let dragging = false;
+  let start = null;
+  let lastPoint = null;
+
+  function getPointerPos(e){
+    const r = canvas.getBoundingClientRect();
+    const px = (e.clientX - r.left) * (canvas.width / r.width);
+    const py = (e.clientY - r.top) * (canvas.height / r.height);
+    return {x: px, y: py};
+  }
+
+  canvas.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    dragging = true;
+    start = getPointerPos(e);
+    lastPoint = start;
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const p = getPointerPos(e);
+    lastPoint = p;
+    // redraw and show current line
+    drawCake();
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+    ctx.lineWidth = Math.max(6, canvas.width * 0.008);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  canvas.addEventListener('pointerup', (e) => {
+    if (!dragging) return;
+    dragging = false;
+    const end = getPointerPos(e);
+
+    // evaluate slice quality
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    const angle = Math.abs(Math.atan2(dy, dx)); // 0 = horizontal, PI/2 = vertical
+
+    // criteria for 'good' horizontal-ish slice that crosses cake center
+    const centerY = cakeArea.y + cakeArea.h/2;
+    const crossesMiddle = ( (start.y < centerY && end.y > centerY) || (end.y < centerY && start.y > centerY) || (Math.abs((start.y+end.y)/2 - centerY) < cakeArea.h*0.08) );
+    const longEnough = absDx > canvas.width * 0.18 || absDy > canvas.height*0.18;
+    const mostlyHorizontal = angle < (Math.PI * 0.35); // ~<63 degrees
+
+    // draw final line
+    drawCake();
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+    ctx.lineWidth = Math.max(8, canvas.width * 0.01);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(end.x, end.y);
+    ctx.stroke();
+    ctx.restore();
+
+    // decide
+    if (crossesMiddle && longEnough && mostlyHorizontal) {
+      onSuccess();
+    } else {
+      // mild shake to indicate failure / try again
+      gsap.fromTo(canvas, { x: -6 }, { x:6, duration:0.06, repeat:5, yoyo:true, clearProps:"x" });
+      // optionally show small 'try again' toast
+      showToast("Nice try — slice across the middle!");
+    }
+  });
+
+  // button interactions
+  retryBtn.addEventListener('click', () => {
+    drawCake();
+    showToast("Try slicing again — be heroic!");
+  });
+
+  playBtn.addEventListener('click', () => {
+    // small hint animation then attempt to auto-slice (for convenience)
+    gsap.to(canvas, { scale:1.02, duration:0.18, yoyo:true, repeat:1, ease:"sine.inOut", clearProps:"scale" });
+    showToast("Drag a straight line across the cake's middle to slice it.");
+  });
+
+  // success sequence
+  function onSuccess(){
+    // play celebration audio (memories)
+    const a = new Audio(memAudioSrc);
+    a.volume = 0.85;
+    a.play().catch(()=>{/* ignore autoplay block */});
+
+    // show confetti
+    spawnConfetti(18);
+
+    // show overlay and animate
+    overlay.classList.add('show');
+    overlay.setAttribute('aria-hidden','false');
+
+    // dramatic card pop
+    gsap.from('.modal', { scale:0.86, autoAlpha:0, duration:0.55, ease:"elastic.out(1,0.6)" });
+
+    // small celebratory flare on canvas
+    gsap.fromTo(canvas, { filter:'brightness(1)' }, { filter:'brightness(1.08)', duration:0.6, yoyo:true, repeat:1, clearProps:'filter' });
+  }
+
+  // Continue to letter
+  continueBtn.addEventListener('click', () => {
+    // navigate to page4
+    location.href = 'page4.html';
+  });
+
+  // helper: toast
+  let toastEl = null;
+  function showToast(text, ms=1400){
+    if (toastEl) toastEl.remove();
+    toastEl = document.createElement('div');
+    toastEl.style.position='fixed';
+    toastEl.style.left='50%';
+    toastEl.style.bottom='12%';
+    toastEl.style.transform='translateX(-50%)';
+    toastEl.style.padding='10px 14px';
+    toastEl.style.background='rgba(0,0,0,0.6)';
+    toastEl.style.color='#ffdddf';
+    toastEl.style.borderRadius='999px';
+    toastEl.style.fontWeight='700';
+    toastEl.style.zIndex=99999;
+    toastEl.style.backdropFilter='blur(4px)';
+    toastEl.textContent = text;
+    document.body.appendChild(toastEl);
+    gsap.to(toastEl, { autoAlpha:1, duration:0.18 });
+    setTimeout(()=> gsap.to(toastEl, { autoAlpha:0, duration:0.18, onComplete:()=> toastEl && toastEl.remove() }), ms);
+  }
+
+  // CONFETTI: spawn small emoji pieces that animate and remove
+  function spawnConfetti(amount=12){
+    for (let i=0;i<amount;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti';
+      // choose emoji shapes for fun (stars, hearts, sparkles)
+      const pool = ['✨','🎉','🍰','⭐','🎈','💫'];
+      el.textContent = pool[Math.floor(Math.random()*pool.length)];
+      // random start position around canvas center
+      const cx = window.innerWidth/2 + (Math.random()-0.5)*260;
+      const cy = window.innerHeight/2 + (Math.random()-0.5)*80;
+      el.style.left = cx + 'px';
+      el.style.top = cy + 'px';
+      el.style.fontSize = (12 + Math.random()*20) + 'px';
+      el.style.opacity = '1';
+      document.body.appendChild(el);
+
+      // random flight path
+      const dx = (Math.random()-0.5)*420;
+      const dy = - (120 + Math.random()*420);
+      gsap.to(el, { x: dx, y: dy, rotation: (Math.random()-0.5)*720, duration: 1.2 + Math.random()*0.8, ease: "power3.out", opacity:0, onComplete: ()=> el.remove() });
+    }
+  }
+
+  // initial entrance
+  gsap.from('.card', { y: 30, autoAlpha: 0, duration: 0.9, ease: "power3.out" });
+
+  // draw once ready (in case image already loaded)
+  if (cakeImg.complete) drawCake();
+
+  // Respect prefers-reduced-motion
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (mq.matches) {
+    gsap.globalTimeline.timeScale(0.0001);
+  }
 })();
 </script>
 </body>
