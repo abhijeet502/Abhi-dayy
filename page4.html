@@ -1,8 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Letter — Abhi</title>
 <style>
   :root{
@@ -60,16 +59,21 @@
     position:relative;
   }
 
+  /* letter box kept centered; inner 'scroll-area' will be auto-centered by script */
   .letter-box{
     width:100%;height:90%;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.75));
     border-radius:12px;padding:22px;overflow:auto;color:#f1dfe2;
     display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
     box-shadow: inset 0 6px 18px rgba(0,0,0,0.35);
     font-size:15px;line-height:1.7;
+    position:relative;
   }
 
   /* typed text container */
-  .typed{white-space:pre-wrap;word-wrap:break-word; width:100%}
+  .typed{white-space:pre-wrap;word-wrap:break-word; width:100%; max-height:100%;}
+
+  /* center marker (hidden) used to compute center scroll */
+  .center-anchor{position:absolute;left:0;right:0;top:50%;height:1px;pointer-events:none;opacity:0}
 
   /* small controls */
   .controls{display:flex;gap:12px;justify-content:center;margin-top:14px}
@@ -114,6 +118,7 @@
             <div class="letter-inner">
               <div id="letterBox" class="letter-box" tabindex="0">
                 <div id="typed" class="typed" aria-hidden="false"></div>
+                <div class="center-anchor" aria-hidden="true"></div>
               </div>
             </div>
           </div>
@@ -129,7 +134,7 @@
   </div>
 
 <script>
-  // The letter text — replace or edit if you want different copy.
+  // The letter text — edit if needed
   const LETTER_TEXT = `To my Birthday Hero
 
 Today marks another year of your incredible existence, and I couldn't be more grateful to be part of your story. You don't need a mask or a suit to be a hero — the way you care, laugh, and show up for people already makes your world brighter.
@@ -147,13 +152,14 @@ Abhi 💖🕷️`;
   const typedEl = document.getElementById('typed');
   const skipBtn = document.getElementById('skipBtn');
   const letterBox = document.getElementById('letterBox');
+  const centerAnchor = document.querySelector('.center-anchor');
 
-  let typingAnim = null;
+  let typingTimer = null;
   let typingIndex = 0;
   let typingRunning = false;
 
-  // typewriter function (smooth, with adjustable speed)
-  function startTyping(text, target, speed = 20) {
+  // smart typing: types char-by-char and gently recenters the scroll so content stays visually in the middle
+  function startTyping(text, target, speed = 18) {
     typingRunning = true;
     typingIndex = 0;
     target.textContent = '';
@@ -161,68 +167,76 @@ Abhi 💖🕷️`;
       function step() {
         if (typingIndex >= text.length) {
           typingRunning = false;
+          // final center
+          centerLetterContent();
           resolve();
           return;
         }
-        // type character
         const ch = text.charAt(typingIndex++);
         target.textContent += ch;
-        // keep letter box visually centered: ensure letter box scroll is in middle while typing
-        // We'll attempt to keep scrollTop near center so new text fills but stays visually centered.
-        // If overflow occurs, allow it to scroll a bit.
-        const container = letterBox;
-        // compute reasonable middle target
-        const middle = Math.max(0, (container.scrollHeight - container.clientHeight)/2);
-        // gently approach middle
-        container.scrollTop = Math.round(container.scrollTop + (middle - container.scrollTop) * 0.25);
 
-        typingAnim = setTimeout(step, speed + Math.random()*20);
+        // gently keep letter content around center: we compute the middle point of scroll and nudge toward it
+        centerLetterContent();
+
+        // variable delay for slightly organic typing rhythm
+        const delay = speed + (Math.random() * 22 - 10);
+        typingTimer = setTimeout(step, Math.max(8, delay));
       }
       step();
     });
   }
 
-  // Open envelope — flip + reveal letter, then type
+  // compute a middle scroll target and approach it smoothly
+  function centerLetterContent() {
+    // If the letter content overflows, we attempt to keep the scroll such that the currently written area stays near the middle
+    const container = letterBox;
+    // desired top so content is visually centered — center anchor is at 50% of container
+    const centerY = (container.scrollHeight - container.clientHeight) / 2;
+    // gently approach that center to avoid jumpy motion
+    const newTop = Math.round(container.scrollTop + (centerY - container.scrollTop) * 0.28);
+    container.scrollTop = newTop;
+  }
+
+  // Open envelope: flip and reveal letter, then start typing
   async function openEnvelope() {
     if (envInner.classList.contains('open')) return;
     envInner.classList.add('open');
-    // small wait so flip begins
+
+    // short delay so flip starts before letter reveals
     await new Promise(r => setTimeout(r, 520));
-    // reveal letter
     letter.classList.add('visible');
     letter.setAttribute('aria-hidden','false');
+
     // start typing
     await startTyping(LETTER_TEXT, typedEl, 18);
-    // typing finished
+
+    // once typing finishes, ensure a nice final center
+    centerLetterContent();
   }
 
   // click or enter to open
   envBtn.addEventListener('click', () => openEnvelope());
   envBtn.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEnvelope(); } });
 
-  // skip typing to finish immediately
+  // skip typing
   skipBtn.addEventListener('click', () => {
-    if (typingAnim) clearTimeout(typingAnim);
+    if (typingTimer) clearTimeout(typingTimer);
     if (typingRunning) {
       typedEl.textContent = LETTER_TEXT;
       typingRunning = false;
-      // scroll to center final text
+      // center final text
       setTimeout(()=> { letterBox.scrollTop = Math.max(0, (letterBox.scrollHeight - letterBox.clientHeight)/2); }, 20);
-    } else {
-      // toggle: if not typing, reopen animation (no-op)
     }
   });
 
-  // optional: allow clicking envelope image again to close (toggle). If you don't want that, remove this.
-  envInner.addEventListener('transitionend', (e) => {
-    // after open completes, focus letter so keyboard users can read/scroll
+  // if envelope finishes flip, focus letter for keyboard users
+  envInner.addEventListener('transitionend', () => {
     if (envInner.classList.contains('open')) {
       setTimeout(()=> letterBox.focus(), 300);
     }
   });
 
-  // Accessibility: if user navigates directly to letter page, reveal typed content immediately
-  // (this helps dev preview)
+  // optional: open automatically if URL contains ?autoopen (helpful while testing)
   if (location.search.includes('autoopen')) {
     openEnvelope();
   }
