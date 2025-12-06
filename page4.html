@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Letter — Abhi</title>
+<style>
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#5b0b0b,#1f0606);color:#fff}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .card{max-width:720px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.6));padding:22px;border-radius:16px;border:1px solid rgba(255,255,255,0.04)}
+  h2{color:#ff6b6b;margin:0 0 8px 0}
+  p{color:#d9c9cf;opacity:0;margin:10px 0}
+  .btn{margin-top:12px;padding:10px 14px;border-radius:999px;background:linear-gradient(90deg,#ff3a3a,#ff7b7b);color:#111;border:none;font-weight:800}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2>To my Birthday Hero</h2>
+      <p id="p1">Today marks another year of your incredible existence, and I couldn't be more grateful to be part of your story. You don't need a mask to be a hero — the way you care already makes the world brighter.</p>
+      <p id="p2">You bring your own kind of superpower into every room you walk into: your laugh, your softness, your strength. You deserve every happy universe and every dream you're secretly chasing.</p>
+      <p id="p3">Forever on your side, <strong>Abhi 💖🕷️</strong></p>
+      <div style="text-align:center"><button class="btn" onclick="location.href='page5.html'">Continue to Playlist</button></div>
+    </div>
+  </div>
+
+<script>
+  // staggered fade-in
+  const ids = ['p1','p2','p3'];
+  ids.forEach((id, i)=> setTimeout(()=> { const el = document.getElementById(id); el.style.transition='opacity 600ms, transform 600ms'; el.style.opacity=1; el.style.transform='translateY(0)'; }, 300 + i*600));
+</script>
+</body>
+</html>
