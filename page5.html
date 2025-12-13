@@ -1,249 +1,434 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Birthday Vibes — Abhi</title>
 
-<style>
-:root{
-  --bg-top:#5b0b0b;
-  --bg-bot:#1f0606;
-  --card-bg: rgba(0,0,0,0.55);
-  --muted:#c9bfc6;
-  --accent1:#ff3a3a;
-  --accent2:#ff7b7b;
-}
-
-html,body{
-  margin:0;
-  height:100%;
-  font-family:Inter,system-ui,Arial;
-  background:linear-gradient(180deg,var(--bg-top),var(--bg-bot));
-  color:#fff;
+<html lang="en">  
+<head>  
+<meta charset="utf-8"/>  
+<meta name="viewport" content="width=device-width,initial-scale=1"/>  
+<title>Birthday Vibes — Abhi</title>  
+<link rel="icon" href="assets/album-art.png">  
+<style>  
+  :root{  
+    --bg-top:#5b0b0b;  
+    --bg-bot:#1f0606;  
+    --card-bg: rgba(0,0,0,0.6);  
+    --muted: #c9bfc6;  
+    --accent1: #ff3a3a;  
+    --accent2: #ff7b7b;  
+    --soft: rgba(255,255,255,0.03);  
+  }  html,body{
+height:100%;
+margin:0;
+font-family:Inter,system-ui,Arial,Helvetica,sans-serif;
+background: linear-gradient(180deg,var(--bg-top),var(--bg-bot));
+color:#fff;
+-webkit-font-smoothing:antialiased;
+-moz-osx-font-smoothing:grayscale;
 }
 
 .wrap{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  padding:26px 16px;
+min-height:100vh;
+display:flex;
+align-items:flex-start;
+justify-content:center;
+padding:28px 18px;
 }
 
 .card{
-  width:100%;
-  max-width:640px;
-  background:linear-gradient(180deg,rgba(255,255,255,.02),var(--card-bg));
-  border-radius:22px;
-  padding:22px;
-  box-shadow:0 30px 90px rgba(0,0,0,.65);
+width:100%;
+max-width:640px;
+background: linear-gradient(180deg, rgba(255,255,255,0.01), var(--card-bg));
+padding:22px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.04);
+box-shadow: 0 28px 80px rgba(0,0,0,0.6);
 }
 
-.header{text-align:center;}
+/* header area */
+.header{ text-align:center; }
 .pre{
-  font-size:12px;
-  letter-spacing:2px;
-  color:var(--muted);
+font-size:12px;
+color:var(--muted);
+letter-spacing:2px;
+text-transform:uppercase;
+margin-bottom:8px;
 }
 .title{
-  font-size:28px;
-  font-weight:900;
-  color:#ff6b6b;
-  margin:8px 0;
+font-size:28px;
+color: #ff6b6b;
+margin:0;
+font-weight:900;
+line-height:1.0;
 }
-.subtitle{color:var(--muted);}
+.subtitle{
+color:var(--muted);
+margin-top:10px;
+font-size:15px;
+}
 
+/* big album art block - updated look */
 .art-wrap{
-  margin:26px auto 18px;
-  width:260px;
-  height:260px;
-  border-radius:20px;
-  background:radial-gradient(circle at top,rgba(255,80,80,.15),transparent 60%);
-  display:grid;
-  place-items:center;
+margin:22px auto 18px;
+width:280px;
+height:280px;
+border-radius:22px;
+background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.85));
+display:grid;
+place-items:center;
+box-shadow:
+0 30px 60px rgba(0,0,0,0.7),
+inset 0 6px 24px rgba(255,90,90,0.03);
+border: 8px solid rgba(0,0,0,0.35);
 }
-
 .art{
-  width:220px;
-  height:220px;
-  border-radius:18px;
-  object-fit:cover;
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.65),
-    0 0 40px rgba(255,70,70,.18);
+width:230px;
+height:230px;
+border-radius:18px;
+object-fit:cover;
+display:block;
+box-shadow: 0 14px 40px rgba(0,0,0,0.7);
+transform: translateY(-4px);
+transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s;
 }
+.art-wrap:hover .art{ transform: translateY(-8px) scale(1.02); box-shadow:0 26px 60px rgba(0,0,0,0.75); }
 
 .section-title{
-  text-align:center;
-  font-size:12px;
-  letter-spacing:2px;
-  color:var(--muted);
-  margin-top:8px;
+text-align:center;
+color:var(--muted);
+font-size:12px;
+letter-spacing:2px;
+margin-top:6px;
 }
 
 .lead{
-  text-align:center;
-  font-size:20px;
-  font-weight:800;
-  margin:12px 0 4px;
+text-align:center;
+font-size:20px;
+font-weight:800;
+margin:14px 10px 4px;
+color:#fff;
 }
-
 .lead-desc{
-  text-align:center;
-  color:var(--muted);
-  margin-bottom:14px;
+text-align:center;
+color:var(--muted);
+margin:8px 22px 14px;
+line-height:1.45;
 }
 
-.playlist{display:flex;flex-direction:column;gap:16px;}
-
+/* playlist rows */
+.playlist{ display:flex; flex-direction:column; gap:14px; margin-top:8px; }
 .track{
-  display:flex;
-  gap:14px;
-  padding:16px;
-  border-radius:16px;
-  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.2));
+display:flex;
+gap:14px;
+align-items:flex-start;
+padding:16px;
+border-radius:14px;
+background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.16));
+border: 1px solid rgba(255,255,255,0.02);
 }
 
+/* circular play with ring */
 .play{
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
-  display:grid;
-  place-items:center;
-  color:#111;
-  font-size:18px;
-  cursor:pointer;
+width:56px;
+height:56px;
+border-radius:50%;
+display:grid;
+place-items:center;
+background: linear-gradient(180deg,#111, rgba(0,0,0,0.6));
+position:relative;
+cursor:pointer;
+flex-shrink:0;
+box-shadow: 0 8px 20px rgba(0,0,0,0.55);
+user-select:none;
 }
-
-.meta{flex:1;}
-.track-title{font-weight:900;}
-.track-artist{color:var(--muted);font-size:13px;margin-top:4px;}
-.track-desc{color:var(--muted);margin-top:10px;line-height:1.45;}
-
-.progress{
-  height:6px;
-  background:rgba(255,255,255,.08);
-  border-radius:999px;
-  overflow:hidden;
-  margin-top:12px;
+.play::before{
+content:"";
+position:absolute;
+inset:-6px;
+border-radius:50%;
+background: radial-gradient(circle at 30% 30%, rgba(255,90,90,0.12), transparent 30%), linear-gradient(90deg,var(--accent1),var(--accent2));
+filter:blur(6px) saturate(120%);
+opacity:0.9;
+z-index:-1;
+transition: transform .18s ease, opacity .18s ease;
 }
-.progress i{
-  display:block;
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+.play .icon{
+font-size:18px;
+color:#fff;
+line-height:1;
+transform:translateX(1px);
 }
-
-.controls{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:20px;
+.play.playing .icon{
+color:#111;
 }
+.play.playing{ background: linear-gradient(90deg,var(--accent1),var(--accent2)); }
+.play.paused{ background: linear-gradient(180deg,#222, #111); }
+.play:active{ transform:scale(.98); }
 
+.meta{ flex:1; min-width:0; }
+.track-title{ font-weight:900; font-size:16px; color:#fff; margin:0; }
+.track-artist{ color:var(--muted); margin-top:6px; font-size:13px; }
+.track-desc{ color:var(--muted); margin-top:10px; font-size:14px; line-height:1.45; }
+
+.progress{ margin-top:12px; height:6px; background: rgba(255,255,255,0.03); border-radius:999px; overflow:hidden; position:relative; }
+.progress > i{ display:block; height:100%; width:0%; background: linear-gradient(90deg,var(--accent1),var(--accent2)); border-radius:999px; transition: width .12s linear; }
+
+/* controls row */
+.controls{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px; }
+.controls-left{ color:var(--muted); font-size:14px; }
+.controls-right{ display:flex; gap:10px; align-items:center; }
+
+/* big play button improved appearance */
 .btn{
-  border:none;
-  border-radius:999px;
-  padding:10px 14px;
-  cursor:pointer;
-  font-weight:900;
+padding:10px 14px; border-radius:999px; border:none; font-weight:900; cursor:pointer;
 }
+.btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted) }
 
 .btn.playbig{
-  width:84px;
-  height:84px;
-  background:linear-gradient(180deg,#fff,#ffd6d6);
-  color:#111;
-  box-shadow:0 25px 80px rgba(255,70,70,.25);
+width:84px; height:84px; border-radius:999px;
+display:grid; place-items:center; font-size:18px;
+color:#111; background: linear-gradient(180deg,#fff,#ffd1d1);
+box-shadow: 0 22px 60px rgba(255,56,56,0.12), 0 6px 18px rgba(0,0,0,0.6);
+border: none;
+transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn.playbig:hover{ transform: translateY(-3px); box-shadow: 0 28px 80px rgba(255,56,56,0.14); }
+.btn.playbig:active{ transform: translateY(0); }
+
+/* show a small ring behind the big button when playing */
+.btn.playbig.playing{ box-shadow: 0 28px 80px rgba(255,56,56,0.26), 0 6px 18px rgba(0,0,0,0.6); }
+
+@media(max-width:480px){
+.art-wrap{ width:200px; height:200px; }
+.art{ width:180px; height:180px;}
+.play{ width:50px; height:50px; }
+.btn.playbig{ width:68px; height:68px; font-size:14px;}
 }
 </style>
-</head>
 
-<body>
-<div class="wrap">
-<div class="card">
+</head>  
+<body>  
+  <div class="wrap">  
+    <div class="card" role="region" aria-label="Birthday vibes playlist">  <div class="header">  
+    <div class="pre">Birthday Vibes Playlist 🕷️🎶</div>  
+    <h1 class="title">Songs that sound like memories</h1>  
+    <div class="subtitle">Some songs that feel like memories, wishes, and you.</div>  
+  </div>  
 
-<div class="header">
-  <div class="pre">BIRTHDAY VIBES PLAYLIST 🕷️🎶</div>
-  <div class="title">Songs that sound like memories</div>
-  <div class="subtitle">Some songs that feel like memories, wishes, and you.</div>
-</div>
+  <!-- UPDATED: use the new playlist art filename -->  
+  <div class="art-wrap" aria-hidden="true">  
+    <img class="art" src="assets/playlist-art.png" alt="playlist art">  
+  </div>  
 
-<div class="art-wrap">
-  <img class="art" src="assets/playlist-art.png">
-</div>
+  <div class="section-title">SPECIAL PLAYLIST</div>  
+  <div class="lead">If our moments together were a soundtrack, they’d probably sound a little like this.</div>  
+  <div class="lead-desc">A small collection of songs that carry memory, warmth, and all the late-night talks — picked for your day.</div>  
 
-<div class="section-title">SPECIAL PLAYLIST</div>
-<div class="lead">If our moments together were a soundtrack, they’d probably sound a little like this.</div>
-<div class="lead-desc">Songs picked for late nights, memories, and quiet smiles.</div>
+  <div class="playlist" id="playlist">  
+    <!-- row 1 -->  
+    <div class="track" data-src="assets/audio/night-changes.mp3">  
+      <div class="play idle" role="button" aria-label="Play Night Changes"><span class="icon">▶</span></div>  
+      <div class="meta">  
+        <div class="track-title">Night Changes</div>  
+        <div class="track-artist">One Direction</div>  
+        <div class="track-desc">For all the ways we’ve grown up, changed, and still somehow stayed “us”.</div>  
+        <div class="progress" aria-hidden="true"><i></i></div>  
+      </div>  
+    </div>  
 
-<div class="playlist">
+    <!-- row 2 -->  
+    <div class="track" data-src="assets/audio/memories.mp3">  
+      <div class="play idle" role="button" aria-label="Play Memories"><span class="icon">▶</span></div>  
+      <div class="meta">  
+        <div class="track-title">Memories</div>  
+        <div class="track-artist">Maroon 5</div>  
+        <div class="track-desc">For every laugh, rant, chaos moment, and late-night chat I never want to forget.</div>  
+        <div class="progress" aria-hidden="true"><i></i></div>  
+      </div>  
+    </div>  
 
-<div class="track" data-src="assets/audio/night-changes.mp3">
-  <div class="play">▶</div>
-  <div class="meta">
-    <div class="track-title">Night Changes</div>
-    <div class="track-artist">One Direction</div>
-    <div class="track-desc">
-For all the ways we’ve grown up, changed, and still somehow stayed “us”.
-For late nights, quiet talks, and moments that slipped by without us noticing —
-proof that even when everything changes, some feelings stay the same.
-    </div>
-    <div class="progress"><i></i></div>
-  </div>
-</div>
+    <!-- row 3 -->  
+    <div class="track" data-src="assets/audio/never-grow-up.mp3">  
+      <div class="play idle" role="button" aria-label="Play Never Grow Up"><span class="icon">▶</span></div>  
+      <div class="meta">  
+        <div class="track-title">Never Grow Up</div>  
+        <div class="track-artist">Taylor Swift</div>  
+        <div class="track-desc">A reminder to keep some wonder. For cake, for wishes, for staying a little young at heart.</div>  
+        <div class="progress" aria-hidden="true"><i></i></div>  
+      </div>  
+    </div>  
+  </div>  
 
-<div class="track" data-src="assets/audio/memories.mp3">
-  <div class="play">▶</div>
-  <div class="meta">
-    <div class="track-title">Memories</div>
-    <div class="track-artist">Maroon 5</div>
-    <div class="track-desc">
-For every laugh, every random rant, every chaotic moment,
-and all those late-night conversations we’ll probably talk about years from now.
-Some memories don’t fade — they just grow warmer with time.
-    </div>
-    <div class="progress"><i></i></div>
-  </div>
-</div>
-
-<div class="track" data-src="assets/audio/never-grow-up.mp3">
-  <div class="play">▶</div>
-  <div class="meta">
-    <div class="track-title">Never Grow Up</div>
-    <div class="track-artist">Taylor Swift</div>
-    <div class="track-desc">
-A reminder to hold on to the small joys —
-cake crumbs, silly smiles, birthday wishes, and childlike excitement.
-No matter how fast life moves, I hope a part of you always stays soft and young.
-    </div>
-    <div class="progress"><i></i></div>
-  </div>
-</div>
-
-</div>
+  <div class="controls" style="margin-top:18px">  
+    <div class="controls-left">Now playing: <span id="nowPlaying">—</span></div>  
+    <div class="controls-right">  
+      <button id="prev" class="btn ghost" aria-label="previous">⟵</button>  
+      <button id="playPause" class="btn playbig" aria-label="play/pause">▶</button>  
+      <button id="next" class="btn ghost" aria-label="next">⟶</button>  
+    </div>  
+  </div>  
 
 </div>
-</div>
 
-<audio id="player"></audio>
+  </div>  <audio id="player" preload="metadata"></audio>
 
-<script>
-const player=document.getElementById("player");
-const tracks=document.querySelectorAll(".track");
-let current=null;
-
-tracks.forEach((t,i)=>{
-  t.querySelector(".play").onclick=()=>{
-    const src=t.dataset.src;
-    if(current===i && !player.paused){player.pause();return;}
-    current=i;
-    player.src=src;
-    player.play();
-  };
-});
-</script>
-
-</body>
+<script>  
+  const player = document.getElementById('player');  
+  const trackEls = Array.from(document.querySelectorAll('.track'));  
+  const playPauseBtn = document.getElementById('playPause');  
+  const prevBtn = document.getElementById('prev');  
+  const nextBtn = document.getElementById('next');  
+  const nowPlaying = document.getElementById('nowPlaying');  
+  
+  let currentIndex = -1;  
+  let raf = null;  
+  
+  function clearActive(){  
+    trackEls.forEach(t=>{  
+      t.classList.remove('active');  
+      const p = t.querySelector('.play');  
+      p.classList.remove('playing','paused');  
+      p.classList.add('idle');  
+      const icon = p.querySelector('.icon');  
+      if(icon) icon.textContent = '▶';  
+      t.querySelector('.progress>i').style.width = '0%';  
+    });  
+    nowPlaying.textContent = '—';  
+    playPauseBtn.classList.remove('playing');  
+    playPauseBtn.textContent = '▶';  
+  }  
+  
+  function setActive(i){  
+    clearActive();  
+    if(i < 0) return;  
+    const t = trackEls[i];  
+    t.classList.add('active');  
+    const p = t.querySelector('.play');  
+    p.classList.remove('idle'); p.classList.add('playing');  
+    const icon = p.querySelector('.icon');  
+    if(icon) icon.textContent = '⏸';  
+    nowPlaying.textContent = t.querySelector('.track-title').textContent + ' — ' + t.querySelector('.track-artist').textContent;  
+    playPauseBtn.classList.add('playing');  
+    playPauseBtn.textContent = '⏸';  
+  }  
+  
+  function playIndex(i){  
+    if(i < 0 || i >= trackEls.length) return;  
+    const src = trackEls[i].dataset.src;  
+    if(!src) return;  
+    // toggle pause if same index  
+    if(currentIndex === i && !player.paused){  
+      player.pause(); return;  
+    }  
+    if(currentIndex !== i){  
+      player.src = src;  
+      currentIndex = i;  
+    }  
+    player.play().catch(()=>{  
+      // may be blocked until user gesture; clicking track/play button is a gesture though  
+      console.warn('play prevented or loading failed');  
+    });  
+    setActive(currentIndex);  
+    startProgressLoop();  
+  }  
+  
+  function startProgressLoop(){  
+    cancelAnimationFrame(raf);  
+    function step(){  
+      if(currentIndex < 0) return;  
+      const el = trackEls[currentIndex];  
+      if(player.duration && !isNaN(player.duration)){  
+        const pct = Math.max(0, Math.min(100, (player.currentTime/player.duration)*100));  
+        el.querySelector('.progress>i').style.width = pct + '%';  
+      }  
+      raf = requestAnimationFrame(step);  
+    }  
+    step();  
+  }  
+  
+  trackEls.forEach((t, idx) => {  
+    const playTile = t.querySelector('.play');  
+    const progressBar = t.querySelector('.progress');  
+  
+    playTile.addEventListener('click', (ev) => {  
+      ev.stopPropagation();  
+      playIndex(idx);  
+    });  
+  
+    t.addEventListener('click', (ev)=> {  
+      if(ev.target.closest('.progress')) return;  
+      playIndex(idx);  
+    });  
+  
+    progressBar.addEventListener('click', (ev)=>{  
+      if(currentIndex !== idx){ playIndex(idx); return; }  
+      const rect = progressBar.getBoundingClientRect();  
+      const x = ev.clientX - rect.left;  
+      const pct = Math.max(0, Math.min(1, x/rect.width));  
+      if(player.duration) player.currentTime = pct * player.duration;  
+    });  
+  });  
+  
+  playPauseBtn.addEventListener('click', ()=>{  
+    if(player.paused){  
+      if(currentIndex === -1) playIndex(0);  
+      else player.play();  
+    } else player.pause();  
+  });  
+  
+  prevBtn.addEventListener('click', ()=>{  
+    if(trackEls.length === 0) return;  
+    let p = currentIndex - 1;  
+    if(p < 0) p = trackEls.length - 1;  
+    playIndex(p);  
+  });  
+  
+  nextBtn.addEventListener('click', ()=>{  
+    if(trackEls.length === 0) return;  
+    let n = currentIndex + 1;  
+    if(n >= trackEls.length) n = 0;  
+    playIndex(n);  
+  });  
+  
+  player.addEventListener('play', ()=> {  
+    playPauseBtn.textContent = '⏸';  
+    if(currentIndex >= 0) setActive(currentIndex);  
+    startProgressLoop();  
+  });  
+  player.addEventListener('pause', ()=> {  
+    playPauseBtn.textContent = '▶';  
+    if(currentIndex >= 0){  
+      const p = trackEls[currentIndex].querySelector('.play');  
+      p.classList.remove('playing');  
+      p.classList.add('paused');  
+      const icon = p.querySelector('.icon'); if(icon) icon.textContent = '▶';  
+    }  
+    cancelAnimationFrame(raf);  
+  });  
+  player.addEventListener('ended', ()=> {  
+    let n = currentIndex + 1;  
+    if(n >= trackEls.length) n = 0;  
+    playIndex(n);  
+  });  
+  
+  // preload metadata (optional) - using corrected assets paths  
+  trackEls.forEach((t, idx)=>{  
+    const src = t.dataset.src;  
+    if(!src) return;  
+    const a = document.createElement('audio');  
+    a.preload = 'metadata';  
+    a.src = src;  
+    // silently add to memory so duration will be known later  
+  });  
+  
+  // keyboard space toggles  
+  window.addEventListener('keydown', (e)=>{  
+    if(e.code === 'Space' && !e.target.matches('input,textarea')){  
+      e.preventDefault();  
+      if(player.paused){  
+        if(currentIndex === -1) playIndex(0);  
+        else player.play();  
+      } else player.pause();  
+    }  
+  });  
+</script> 
+</body>  
 </html>
